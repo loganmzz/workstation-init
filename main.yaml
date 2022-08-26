@@ -1,0 +1,16 @@
+---
+- name: Install default packages
+  hosts: localhost
+
+  tasks:
+  - name: Directory ~/.local
+    ansible.builtin.file:
+      path: "~/{{ item }}"
+      state: directory
+      mode: u=rwx,g=rx,o=
+    loop:
+    - .local
+    - .local/bin
+    - .local/lib
+    - .local/etc
+
