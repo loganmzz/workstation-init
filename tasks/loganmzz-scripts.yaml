@@ -1,0 +1,16 @@
+- name: Install loganmzz-scripts | git clone
+  ansible.builtin.git:
+    repo: git@github.com:loganmzz/bash-scripts.git
+    dest: ~/.local/lib/loganmzz-scripts
+
+- name: Install loganmzz-scripts | List binaries
+  ansible.builtin.find:
+    paths: ~/.local/lib/loganmzz-scripts/bin
+  register: install_loganmzz_scripts_binaries
+
+- name: Install loganmzz-scripts | Link binaries
+  ansible.builtin.file:
+    src: "~/.local/lib/loganmzz-scripts/bin/{{ item }}"
+    dest: "~/.local/bin/{{ item }}"
+    state: link
+  loop: "{{ install_loganmzz_scripts_binaries.files | map(attribute='path') | map('basename') }}"

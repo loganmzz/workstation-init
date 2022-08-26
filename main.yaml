@@ -27,3 +27,6 @@
 
   - name: Install VS Code
     ansible.builtin.include_tasks: tasks/vscode.yaml
+
+  - name: Install loganmzz-scripts
+    ansible.builtin.include_tasks: tasks/loganmzz-scripts.yaml
