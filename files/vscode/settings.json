@@ -1,2 +1,83 @@
 {
+    "editor.renderControlCharacters": true,
+    "files.eol": "\n",
+    "terminal.integrated.shell.windows": "C:\\Windows\\Sysnative\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "terminal.integrated.scrollback": 10000,
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.editor.enablePreview": false,
+    "csscomb.formatOnSave": true,
+    "[scss]": {
+
+    },
+    "extensions.ignoreRecommendations": true,
+    "typescript.tsserver.log": "verbose",
+    "editor.renderWhitespace": "all",
+    "window.title": "${dirty}${rootName}${separator}${activeEditorMedium}${separator}${rootPath}",
+    "material-icon-theme.showUpdateMessage": false,
+    "editor.fontLigatures": true,
+    "terminal.integrated.fontFamily": "'FiraCode Nerd Font', monospace",
+    "terminal.integrated.fontSize": 14,
+    "terminal.external.linuxExec": "gnome-terminal",
+    "[yaml]": {
+        "editor.detectIndentation": false,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 2,
+    },
+    "[html]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    },
+    "gitlens.keymap": "none",
+    "gitlens.advanced.messages": {
+        "suppressShowKeyBindingsNotice": true
+    },
+    "workbench.startupEditor": "welcomePage",
+    "gitlens.historyExplorer.enabled": true,
+    "[shellscript]": {},
+    "files.associations": {
+        "*.bats": "shellscript",
+        "*.shrc": "shellscript",
+        "pipeline*.yml": "concourse-pipeline-yaml",
+        "pipelines/*.yml": "concourse-pipeline-yaml",
+        "*pipeline.yml": "concourse-pipeline-yaml",
+        "task*.yml": "concourse-task-yaml",
+        "tasks/*.yml": "concourse-task-yaml",
+        ".bash_completion": "shellscript",
+        ".env": "shellscript",
+        "*.tf": "terraform",
+        "Jenkinsfile*": "groovy",
+        "*.jenkinsfile": "groovy",
+        "*.pom": "xml",
+        "kubeconfig": "yaml",
+        "*Dockerfile*": "dockerfile",
+        "group_vars/*": "yaml"
+    },
+    "files.trimTrailingWhitespace": true,
+    "window.menuBarVisibility": "toggle",
+    "gitlens.views.fileHistory.enabled": true,
+    "gitlens.views.lineHistory.enabled": true,
+    "typescript.updateImportsOnFileMove.enabled": "always",
+    "yaml.schemas": {
+        "Kubernetes": "*.yaml"
+    },
+    "[json]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "HookyQR.beautify"
+    },
+    "vsicons.dontShowNewVersionMessage": true,
+    "workbench.editorAssociations": {
+        "git-rebase-todo": "default"
+    },
+    "jenkins-jack.pipeline.tree.items": [],
+    "security.workspace.trust.untrustedFiles": "open",
+    "yaml.customTags": [
+        "!encrypted/pkcs1-oaep scalar",
+        "!vault scalar"
+    ],
+    "editor.fontFamily": "'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback', ‘Fira Code’, 'FiraCode'",
+    "terminal.integrated.persistentSessionReviveProcess": "never",
+    "python.defaultInterpreterPath": "/bin/python3",
+    "terminal.integrated.enableMultiLinePasteWarning": false,
+    "terminal.integrated.allowChords": false
 }
