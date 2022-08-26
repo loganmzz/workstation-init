@@ -29,3 +29,9 @@ sudo add-apt-repository ppa:git-core/ppa
 sudo apt update
 sudo apt install git
 ```
+
+# Usage
+
+```bash
+~/.local/bin/ansible-playbook --ask-become-pass main.yaml
+```
