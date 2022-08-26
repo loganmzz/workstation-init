@@ -1,0 +1,11 @@
+- name: Install Google Chrome | Download
+  ansible.builtin.get_url:
+    url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    dest: ./temp/google_chrome.deb
+    mode: '0640'
+
+- name: Install Google Chrome | apt
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    deb: ./temp/google_chrome.deb

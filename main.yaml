@@ -19,5 +19,8 @@
     - .local/lib
     - .local/etc
 
+  - name: Install Google Chrome
+    ansible.builtin.include_tasks: tasks/google_chrome.yaml
+
   - name: Install VS Code
     ansible.builtin.include_tasks: tasks/vscode.yaml
