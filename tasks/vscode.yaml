@@ -15,3 +15,9 @@
     src: ./files/vscode/settings.json
     dest: ~/.config/Code/User/settings.json
     mode: '0640'
+
+- name: Install VS Code | Copy user keybindings
+  ansible.builtin.copy:
+    src: ./files/vscode/keybindings.json
+    dest: ~/.config/Code/User/keybindings.json
+    mode: '0640'
