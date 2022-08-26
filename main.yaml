@@ -3,6 +3,11 @@
   hosts: localhost
 
   tasks:
+  - name: Temporary directory
+    ansible.builtin.file:
+      path: ./temp
+      state: directory
+      mode: u=rwx,g=,o=
   - name: Directory ~/.local
     ansible.builtin.file:
       path: "~/{{ item }}"
@@ -14,3 +19,5 @@
     - .local/lib
     - .local/etc
 
+  - name: Install VS Code
+    ansible.builtin.include_tasks: tasks/vscode.yaml
