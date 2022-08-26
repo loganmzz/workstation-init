@@ -30,3 +30,6 @@
 
   - name: Install loganmzz-scripts
     ansible.builtin.include_tasks: tasks/loganmzz-scripts.yaml
+
+  - name: Install Slack
+    ansible.builtin.include_tasks: tasks/slack.yaml

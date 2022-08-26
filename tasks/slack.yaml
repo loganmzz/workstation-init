@@ -1,0 +1,11 @@
+- name: Install Slack | Download
+  ansible.builtin.get_url:
+    url: https://downloads.slack-edge.com/releases/linux/4.27.156/prod/x64/slack-desktop-4.27.156-amd64.deb
+    dest: ./temp/slack-4.27.156.deb
+    mode: '0640'
+
+- name: Install Slack | apt
+  become: yes
+  become_user: root
+  ansible.builtin.apt:
+    deb: ./temp/slack-4.27.156.deb
