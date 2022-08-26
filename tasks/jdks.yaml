@@ -1,0 +1,19 @@
+- vars:
+    jdk_homeroot: "/usr/lib/jvm"
+  block:
+  - name: Install JDKs | Set root directory
+    become: yes
+    ansible.builtin.file:
+      path: "{{ jdk_homeroot }}"
+      state: directory
+  - name: Install JDKs | Install
+    ansible.builtin.include_tasks: ./jdk.yaml
+    vars:
+      jdks:
+      - id: 17.0.4.1+1
+        aliases:
+        - 17
+    loop: "{{ jdks }}"
+    loop_control:
+      loop_var: jdk
+      label: "{{ jdk.id }}"
