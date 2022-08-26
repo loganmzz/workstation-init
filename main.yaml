@@ -19,6 +19,9 @@
     - .local/lib
     - .local/etc
 
+  - name: Setup Git
+    ansible.builtin.include_tasks: tasks/git.yaml
+
   - name: Install Google Chrome
     ansible.builtin.include_tasks: tasks/google_chrome.yaml
 

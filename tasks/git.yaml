@@ -1,0 +1,11 @@
+- name: Setup Git | .gitconfig
+  ansible.builtin.copy:
+    src: ./files/git/config
+    dest: ~/.gitconfig
+    mode: '0640'
+
+- name: Setup Git | .gitignore
+  ansible.builtin.copy:
+    src: ./files/git/gitignore
+    dest: ~/.gitignore
+    mode: '0640'
