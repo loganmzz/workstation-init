@@ -6,6 +6,10 @@
     ansible.builtin.file:
       path: "{{ jdk_homeroot }}"
       state: directory
+  - name: Install JDKs | envvars path
+    ansible.builtin.copy:
+      src: ./files/jdks/envvars-path.shrc
+      dest: ~/.local/etc/envvars/50-jdk-path.shrc
   - name: Install JDKs | Install
     ansible.builtin.include_tasks: ./jdk.yaml
     vars:
@@ -13,12 +17,16 @@
       - id: 17.0.4.1+1
         aliases:
         - 17
+        default: yes
+        envvars: yes
       - id: 11.0.16.1+1
         aliases:
         - 11
+        envvars: yes
       - id: 8u345-b01
         aliases:
         - 8
+        envvars: yes
     loop: "{{ jdks }}"
     loop_control:
       loop_var: jdk

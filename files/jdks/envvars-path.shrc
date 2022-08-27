@@ -1,0 +1,1 @@
+[[ -z "${JAVA_HOME}" ]] || export PATH="${JAVA_HOME}/bin:${PATH}"

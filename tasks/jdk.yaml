@@ -36,3 +36,15 @@
       src: "{{ jdk_home | basename }}"
       state: link
     loop: "{{ jdk.aliases | default([]) }}"
+
+  - name: "Install JDK {{ jdk.id }} | envvars jdk_home"
+    ansible.builtin.template:
+      src: ./files/jdks/envvars-jdk_home.shrc.j2
+      dest: ~/.local/etc/envvars/00-jdks-java_home_{{ jdk_major }}.shrc
+    when: jdk.envvars == True
+
+  - name: "Install JDK {{ jdk.id }} | envvars java_home"
+    ansible.builtin.template:
+      src: ./files/jdks/envvars-java_home.shrc.j2
+      dest: ~/.local/etc/envvars/10-jdks-java_home.shrc
+    when: jdk.default is defined and jdk.default == True
