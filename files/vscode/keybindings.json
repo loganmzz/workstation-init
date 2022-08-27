@@ -58,5 +58,9 @@
         "key": "ctrl+shift+i",
         "command": "-editor.action.formatDocument",
         "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+q",
+        "command": "-workbench.action.quit"
     }
 ]
