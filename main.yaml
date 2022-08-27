@@ -42,3 +42,6 @@
 
   - name: Install Slack
     ansible.builtin.include_tasks: tasks/slack.yaml
+
+  - name: Install kubectl
+    ansible.builtin.include_tasks: tasks/kubectl.yaml

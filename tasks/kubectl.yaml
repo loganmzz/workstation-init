@@ -1,0 +1,5 @@
+- name: Install kubectl | Download
+  ansible.builtin.get_url:
+    url: https://storage.googleapis.com/kubernetes-release/release/v1.25.0/bin/linux/amd64/kubectl
+    dest: ~/.local/bin/kubectl
+    mode: u=rwx,g=rx,o=
