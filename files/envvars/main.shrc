@@ -1,0 +1,7 @@
+[[ ! -z "${DEFAULT_PATH}" ]] || export DEFAULT_PATH="${PATH}"
+export PATH="${DEFAULT_PATH}"
+
+for file in $( find ~/.local/etc/envvars -type f | sort ); do
+    [[ -z "${DEBUG}" ]] || echo "Loading ${file}"
+    . "${file}"
+done

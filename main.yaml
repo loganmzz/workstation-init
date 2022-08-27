@@ -19,6 +19,9 @@
     - .local/lib
     - .local/etc
 
+  - name: Setup envvars
+    ansible.builtin.include_tasks: tasks/envvars.yaml
+
   - name: Setup Git
     ansible.builtin.include_tasks: tasks/git.yaml
 

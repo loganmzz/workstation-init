@@ -1,0 +1,16 @@
+- name: Install envvars | Config directory
+  ansible.builtin.file:
+    path: ~/.local/etc/envvars
+    state: directory
+
+- name: Install envvars | Main script
+  ansible.builtin.copy:
+    src: ./files/envvars/main.shrc
+    dest: ~/.envvars
+
+- name: Install envvars | Setup .bashrc
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} envvars"
+    block: |
+      . ~/.envvars
