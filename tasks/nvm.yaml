@@ -1,0 +1,10 @@
+- name: Install nvm | git clone
+  ansible.builtin.git:
+    repo: git@github.com:nvm-sh/nvm.git
+    dest: ~/.nvm
+    version: v0.39.1
+
+- name: Install nvm | envvars
+  ansible.builtin.copy:
+    src: ./files/nvm/envvars.shrc
+    dest: ~/.local/etc/envvars/00-nvm.shrc

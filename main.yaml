@@ -37,5 +37,8 @@
   - name: Install JDKs
     ansible.builtin.include_tasks: tasks/jdks.yaml
 
+  - name: Install NVM
+    ansible.builtin.include_tasks: tasks/nvm.yaml
+
   - name: Install Slack
     ansible.builtin.include_tasks: tasks/slack.yaml
