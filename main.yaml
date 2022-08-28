@@ -19,29 +19,16 @@
     - .local/lib
     - .local/etc
 
-  - name: Setup envvars
-    ansible.builtin.include_tasks: tasks/envvars.yaml
-
-  - name: Setup Git
-    ansible.builtin.include_tasks: tasks/git.yaml
-
-  - name: Install Google Chrome
-    ansible.builtin.include_tasks: tasks/google_chrome.yaml
-
-  - name: Install VS Code
-    ansible.builtin.include_tasks: tasks/vscode.yaml
-
-  - name: Install loganmzz-scripts
-    ansible.builtin.include_tasks: tasks/loganmzz-scripts.yaml
-
-  - name: Install JDKs
-    ansible.builtin.include_tasks: tasks/jdks.yaml
-
-  - name: Install NVM
-    ansible.builtin.include_tasks: tasks/nvm.yaml
-
-  - name: Install Slack
-    ansible.builtin.include_tasks: tasks/slack.yaml
-
-  - name: Install kubectl
-    ansible.builtin.include_tasks: tasks/kubectl.yaml
+  - ansible.builtin.include_tasks: tasks/{{ task }}.yaml
+    loop:
+    - envvars
+    - git
+    - google_chrome
+    - vscode
+    - loganmzz-scripts
+    - jdks
+    - nvm
+    - slack
+    - kubectl
+    loop_control:
+      loop_var: task
