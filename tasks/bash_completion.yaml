@@ -1,0 +1,16 @@
+- name: Install bash_completion | Script
+  ansible.builtin.copy:
+    src: ./files/bash_completion/main.shrc
+    dest: ~/.local/etc/bash_completion
+
+- name: Install bash_completion | Directory
+  ansible.builtin.file:
+    path: ~/.local/etc/bash_completion.d
+    state: directory
+
+- name: Install bash_completion | .bashrc
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    marker: "# {mark} user bash_completion"
+    block: |
+      . ~/.local/etc/bash_completion

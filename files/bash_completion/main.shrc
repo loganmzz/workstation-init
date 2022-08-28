@@ -1,0 +1,6 @@
+[[ ! -d ~/.local/etc/bash_completion.d ]] || {
+    for file in $(find ~/.local/etc/bash_completion.d -type f | sort ); do
+        [[ -z "${DEBUG}" ]] || echo "Load ${file}"
+        . "${file}" || echo "Error from ${file}" >&2
+    done
+}

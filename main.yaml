@@ -21,6 +21,7 @@
 
   - ansible.builtin.include_tasks: tasks/{{ task }}.yaml
     loop:
+    - bash_completion
     - envvars
     - git
     - google_chrome
