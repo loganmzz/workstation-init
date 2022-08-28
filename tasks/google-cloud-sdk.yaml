@@ -1,0 +1,30 @@
+- vars:
+    google_cloud_sdk_version: "399.0.0"
+    google_cloud_sdk_archive: "{{ playbook_dir }}/temp/google-cloud-sdk-{{ google_cloud_sdk_version }}.tar.gz"
+  block:
+  - name: Install Google Cloud CLI | Check
+    ansible.builtin.stat:
+      path: ~/.local/lib/google-cloud-sdk
+    register: google_cloud_sdk_dir_check
+
+  - name: Install Google Cloud CLI | Download
+    ansible.builtin.get_url:
+      url: https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ google_cloud_sdk_version }}-linux-x86_64.tar.gz
+      dest: "{{ google_cloud_sdk_archive }}"
+    when: google_cloud_sdk_dir_check.stat.exists == False
+
+  - name: Install Google Cloud CLI | Extract
+    ansible.builtin.unarchive:
+      src: "{{ google_cloud_sdk_archive }}"
+      dest: "~/.local/lib"
+    when: google_cloud_sdk_dir_check.stat.exists == False
+
+  - name: Install Google Cloud CLI | envvars
+    ansible.builtin.copy:
+      src: ./files/google-cloud-sdk/envvars.shrc
+      dest: "~/.local/etc/envvars/00-glcoud-sdk.shrc"
+
+  - name: Install Google Cloud CLI | Clear
+    ansible.builtin.file:
+      path: "{{ google_cloud_sdk_archive }}"
+      state: absent

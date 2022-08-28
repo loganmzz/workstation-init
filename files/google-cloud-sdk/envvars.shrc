@@ -1,0 +1,2 @@
+export GOOGLE_CLOUD_SDK_HOME=~/.local/lib/google-cloud-sdk
+export PATH="${GOOGLE_CLOUD_SDK_HOME}/bin:${PATH}"

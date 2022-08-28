@@ -34,5 +34,6 @@
     - kubectl
     - helm
     - terraform
+    - google-cloud-sdk
     loop_control:
       loop_var: task
