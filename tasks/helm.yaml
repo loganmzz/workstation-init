@@ -1,0 +1,48 @@
+- vars:
+    helm_version: "3.9.4"
+    helm_temp_dir: "{{ playbook_dir }}/temp/helm-{{ helm_version }}"
+  block:
+  - name: Install Helm | Check
+    ansible.builtin.stat:
+      path: ~/.local/bin/helm
+    register: helm_bin_check
+
+  - name: Install Helm | Download
+    ansible.builtin.get_url:
+      url: "https://get.helm.sh/helm-v{{ helm_version }}-linux-amd64.tar.gz"
+      dest: "{{ helm_temp_dir }}.tar.gz"
+    when: helm_bin_check.stat.exists == False
+
+  - name: "Install Helm | Extract"
+    ansible.builtin.file:
+      path: "{{ helm_temp_dir }}"
+      state: directory
+    when: helm_bin_check.stat.exists == False
+
+  - name: "Install Helm | Extract"
+    ansible.builtin.unarchive:
+      src: "{{ helm_temp_dir }}.tar.gz"
+      dest: "{{ helm_temp_dir }}"
+      remote_src: yes
+    when: helm_bin_check.stat.exists == False
+
+  - name: "Install Helm | Install"
+    ansible.builtin.copy:
+      src: "{{ helm_temp_dir }}/linux-amd64/helm"
+      dest: "~/.local/bin/helm"
+      mode: u=rwx,g=rx,o=
+    when: helm_bin_check.stat.exists == False
+
+  - name: "Install Helm | Clear"
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: absent
+    when: helm_bin_check.stat.exists == False
+    loop:
+    - "{{ helm_temp_dir }}.tar.gz"
+    - "{{ helm_temp_dir }}"
+
+  - name: "Install Helm | bash_completion"
+    ansible.builtin.copy:
+      src: ./files/helm/bash_completion.shrc
+      dest: ~/.local/etc/bash_completion.d/helm

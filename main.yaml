@@ -32,5 +32,6 @@
     - nvm
     - slack
     - kubectl
+    - helm
     loop_control:
       loop_var: task
