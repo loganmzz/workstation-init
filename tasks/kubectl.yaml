@@ -3,3 +3,18 @@
     url: https://storage.googleapis.com/kubernetes-release/release/v1.25.0/bin/linux/amd64/kubectl
     dest: ~/.local/bin/kubectl
     mode: u=rwx,g=rx,o=
+
+- name: Install kubectl | kubectx/kubens - Git clone
+  ansible.builtin.git:
+    repo: https://github.com/ahmetb/kubectx
+    dest: ~/.local/lib/kubectx
+    single_branch: yes
+
+- name: Install kubectl | kubectx/kubens - Link
+  ansible.builtin.file:
+    src: "~/.local/lib/kubectx/{{ item }}"
+    dest: "~/.local/bin/{{ item }}"
+    state: link
+  loop:
+  - kubectx
+  - kubens
