@@ -1,4 +1,4 @@
-- name: Install kubectl | Download
+- name: Install kubectl | kubectl - Download
   ansible.builtin.get_url:
     url: https://storage.googleapis.com/kubernetes-release/release/v1.25.0/bin/linux/amd64/kubectl
     dest: ~/.local/bin/kubectl
@@ -10,10 +10,24 @@
     dest: ~/.local/lib/kubectx
     single_branch: yes
 
-- name: Install kubectl | kubectx/kubens - Link
+- name: Install kubectl | kubectx/kubens - Link binaries
   ansible.builtin.file:
     src: "~/.local/lib/kubectx/{{ item }}"
     dest: "~/.local/bin/{{ item }}"
+    state: link
+  loop:
+  - kubectx
+  - kubens
+
+- name: Install kubectl | kubectl - bash_completion
+  ansible.builtin.copy:
+    src: ./files/kubectl/bash_completion.shrc
+    dest: ~/.local/etc/bash_completion.d/kubectl
+
+- name: Install kubectl | kubectx/kubens - Link bash_completion
+  ansible.builtin.file:
+    src: "~/.local/lib/kubectx/completion/{{ item }}.bash"
+    dest: "~/.local/etc/bash_completion.d/{{ item }}"
     state: link
   loop:
   - kubectx
