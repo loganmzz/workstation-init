@@ -11,6 +11,7 @@
 - name: Install bash_completion | .bashrc
   ansible.builtin.blockinfile:
     path: ~/.bashrc
+    insertafter: "# END envvars"
     marker: "# {mark} user bash_completion"
     block: |
       . ~/.local/etc/bash_completion
