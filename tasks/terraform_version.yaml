@@ -1,0 +1,39 @@
+- name: "Install Terraform {{ terraform_version }} | Check"
+  ansible.builtin.stat:
+    path: "~/.local/bin/terraform-{{ terraform_version }}"
+  register: terraform_bin_check
+
+- name: "Install Terraform {{ terraform_version }} | Download"
+  ansible.builtin.get_url:
+    url: https://releases.hashicorp.com/terraform/{{ terraform_version }}/terraform_{{ terraform_version }}_linux_amd64.zip
+    dest: "./temp/terraform-{{ terraform_version }}.zip"
+  when: terraform_bin_check.stat.exists == False
+
+- name: "Install Terraform {{ terraform_version }} | Extract"
+  ansible.builtin.file:
+    path: "./temp/terraform-{{ terraform_version }}"
+    state: directory
+  when: terraform_bin_check.stat.exists == False
+
+- name: "Install Terraform {{ terraform_version }} | Extract"
+  ansible.builtin.unarchive:
+    src: "./temp/terraform-{{ terraform_version }}.zip"
+    dest: "./temp/terraform-{{ terraform_version }}"
+    remote_src: yes
+  when: terraform_bin_check.stat.exists == False
+
+- name: "Install Terraform {{ terraform_version }} | Install"
+  ansible.builtin.copy:
+    src: "./temp/terraform-{{ terraform_version }}/terraform"
+    dest: "~/.local/bin/terraform-{{ terraform_version }}"
+    remote_src: yes
+    mode: u=rwx,g=rx,o=
+  when: terraform_bin_check.stat.exists == False
+
+- name: "Install Terraform {{ terraform_version }} | Clear"
+  ansible.builtin.file:
+    path: "./temp/{{ item }}"
+    state: absent
+  loop:
+  - "terraform-{{ terraform_version }}"
+  - "terraform-{{ terraform_version }}.zip"

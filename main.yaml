@@ -33,5 +33,6 @@
     - slack
     - kubectl
     - helm
+    - terraform
     loop_control:
       loop_var: task

@@ -1,0 +1,9 @@
+- ansible.builtin.include_tasks: "tasks/terraform_version.yaml"
+  vars:
+    terraform_versions:
+    - 1.2.8
+    - 1.2.2
+    - 1.0.5
+  loop: "{{ terraform_versions }}"
+  loop_control:
+    loop_var: terraform_version
