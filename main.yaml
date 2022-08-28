@@ -24,6 +24,7 @@
     - envvars
     - bash_completion
     - git
+    - jq
     - google_chrome
     - vscode
     - loganmzz-scripts

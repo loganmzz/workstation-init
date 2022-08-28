@@ -1,0 +1,11 @@
+- name: Install jq | Download
+  ansible.builtin.get_url:
+    url: https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+    dest: ~/.local/bin/jq
+    mode: u=rwx,g=rx,o=
+
+- name: Install jq | bash_completion
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/scop/bash-completion/master/completions/jq
+    dest: ~/.local/etc/bash_completion.d/jq
+    mode: u=rw,g=r,o=
