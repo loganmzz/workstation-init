@@ -31,6 +31,12 @@
       src: ~/.local/lib/google-cloud-sdk/completion.bash.inc
       state: link
 
+  - name: Install Google Cloud CLI | Components
+    loganmzz_gcloud_component:
+      name: "{{ item }}"
+    loop:
+    - gke-gcloud-auth-plugin
+
   - name: Install Google Cloud CLI | Clear
     ansible.builtin.file:
       path: "{{ google_cloud_sdk_archive }}"
