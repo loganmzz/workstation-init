@@ -19,10 +19,17 @@
       dest: "~/.local/lib"
     when: google_cloud_sdk_dir_check.stat.exists == False
 
-  - name: Install Google Cloud CLI | envvars
-    ansible.builtin.copy:
-      src: ./files/google-cloud-sdk/envvars.shrc
-      dest: "~/.local/etc/envvars/00-glcoud-sdk.shrc"
+  - name: Install Google Cloud CLI | path
+    ansible.builtin.file:
+      path: "~/.local/etc/envvars/00-glcoud-sdk.shrc"
+      src: ~/.local/lib/google-cloud-sdk/path.bash.inc
+      state: link
+
+  - name: Install Google Cloud CLI | bash_completion
+    ansible.builtin.file:
+      path: "~/.local/etc/bash_completion.d/google-cloud-sdk"
+      src: ~/.local/lib/google-cloud-sdk/completion.bash.inc
+      state: link
 
   - name: Install Google Cloud CLI | Clear
     ansible.builtin.file:
