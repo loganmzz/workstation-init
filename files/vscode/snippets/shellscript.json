@@ -1,0 +1,118 @@
+{
+	// Place your snippets for shellscript here. Each snippet is defined under a snippet name and has a prefix, body and
+	// description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the
+	// same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+	"Bash script": {
+		"prefix": "bash",
+		"body": [
+			"#!/usr/bin/env bash",
+			"set -o pipefail",
+			"",
+			"basedir=\"$(cd \"$(dirname \"\\${BASH_SOURCE}\")\" >/dev/null; pwd)\" || exit 1",
+			"",
+			"[[ -f \"\\${basedir}/__init.shrc\" ]] && {"
+			"	. \"\\${basedir}/__init.shrc\" || exit 1 ",
+			"}",
+			"",
+			"function main() {",
+			"	$0",
+			"	return 0",
+			"}",
+			"",
+			"main \"$@\"",
+			""
+		],
+		"description": "Initiate Bash script"
+	},
+	"List functions": {
+		"prefix": "functions",
+		"body": [
+			"function __list_functions() {",
+			"	local prefix=\"\\${1}\"",
+			"	local foundfn=''",
+			"	for foundfn in $(declare -F | cut -d ' ' -f 3 | grep -x \"\\${prefix/./\\\\.}.*\"); do",
+			"		echo \"\\${foundfn#\"\\$prefix\"}\"",
+			"	done",
+			"}"
+		],
+		"description": "List functions matching a prefix"
+	},
+	"Curl function": {
+		"prefix": "curl",
+		"body": [
+			"function ${1:__curl}() {",
+			"	local curl_output_file=''",
+			"	curl_output_file=\"$(mktemp -p \"\\${basedir}\" \"curl.XXX.out\")\" || {",
+			"		echo \"Can't create temporary Curl ouptut file\"",
+			"		return 1",
+			"	} >&2",
+			"",
+			"	local curl_url=\"\\$1\"; shift",
+			"	curl_http_status=0",
+			"	curl_http_status=\"\\$(curl -s \"\\${curl_url}\" -u \"\\${NEXUS_USER_LOGIN}:\\${NEXUS_USER_PASSWORD}\" -H 'Accept: application/json' -o \"\\${curl_output_file}\" -w \"%{http_code}\" \"\\$@\")\"; local rc=\\$?",
+			"	curl_http_body=\"\\$(cat \"\\${curl_output_file}\")\"",
+			"	rm -rf \"\\${curl_output_file}\"",
+			"	return \\$rc",
+			"}",
+		],
+		"description": "Nice Curl handling function"
+	},
+	"Logs": {
+		"prefix": "log",
+		"body": [
+			"logs_ndc=()",
+			"function logs.ndc.push() {",
+			"	[[ \"\\$#\" == 1 ]] || {",
+			"		echo \"logs.ndc.push(\\$@): Only one context can be passed at once\" >&2",
+			"		return 1",
+			"	}",
+			"	logs_ndc+=( \"\\$1\" )",
+			"}",
+			"function logs.ndc.pop() {",
+			"	unset logs_ndc[\\${#logs_ndc[@]}-1]",
+			"}",
+			"function logs.ndc.clear() {",
+			"	logs_ndc=()",
+			"}",
+			"",
+			"function logs.log() {",
+			"	local level=\"\\$1\"; shift",
+			"	local level_fmt_fg=()",
+			"	case \"\\${level}\" in",
+			"		ERROR)",
+			"			level_fmt_fg+=(setaf 1)",
+			"			;;",
+			"",
+			"		INFO)",
+			"			level_fmt_fg+=(setaf 2)",
+			"			;;",
+			"",
+			"		*)",
+			"			level_fmt_fg+=(sgr0)",
+			"			;;",
+			"	esac",
+			"	while read line; do",
+			"		printf '%s %s[%-5s]%s %s %s\\n'  \"\\$(date --iso-860=seconds)\" \"\\$(tput \"\\${level_fmt_fg[@]}\")\" \"\\${level}\" \"\\$(tput sgr0)\" \"\\${logs_ndc[*]}\" \"\\${line}\"",
+			"	done <<<\"\\$@\"",
+			"}",
+			"",
+			"function logs.error() {",
+			"	logs.log 'ERROR' \"\\$@\" >&2",
+			"}",
+			"",
+			"function logs.info() {",
+			"	logs.log 'INFO' \"\\$@\"",
+			"}"
+		]
+	}
+}
