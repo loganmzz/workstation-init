@@ -1,26 +1,13 @@
 ---
 - name: Install default packages
   hosts: localhost
+  connection: local
+  gather_facts: no
 
   tasks:
-  - name: Temporary directory
-    ansible.builtin.file:
-      path: ./temp
-      state: directory
-      mode: u=rwx,g=,o=
-  - name: Directory ~/.local
-    ansible.builtin.file:
-      path: "~/{{ item }}"
-      state: directory
-      mode: u=rwx,g=rx,o=
-    loop:
-    - .local
-    - .local/bin
-    - .local/lib
-    - .local/etc
-
   - ansible.builtin.include_tasks: tasks/{{ task }}.yaml
     loop:
+    - init
     - envvars
     - bash_completion
     - git

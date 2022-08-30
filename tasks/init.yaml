@@ -1,0 +1,16 @@
+- name: Init | Temporary directory
+  ansible.builtin.file:
+    path: ./temp
+    state: directory
+    mode: u=rwx,g=,o=
+
+- name: Init | Directory ~/.local
+  ansible.builtin.file:
+    path: "~/{{ item }}"
+    state: directory
+    mode: u=rwx,g=rx,o=
+  loop:
+  - .local
+  - .local/bin
+  - .local/lib
+  - .local/etc
