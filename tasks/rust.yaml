@@ -1,0 +1,40 @@
+- name: Install Rust | Check
+  ansible.builtin.stat:
+    path: ~/.cargo/bin/rustup
+  register: rust_bin_check
+
+- name: Install Rust | Download
+  ansible.builtin.get_url:
+    url: https://sh.rustup.rs
+    dest: ./temp/rustup-install.sh
+    mode: 0700
+  when: rust_bin_check.stat.exists == False
+
+- name: Install Rust | Install
+  ansible.builtin.command: ./temp/rustup-install.sh -y --default-toolchain none --profile default --no-modify-path
+  when: rust_bin_check.stat.exists == False
+
+- name: Install Rust | Clear
+  ansible.builtin.file:
+    path: ./temp/rustup-install.sh
+    state: absent
+
+- name: Install Rust | envvars
+  ansible.builtin.file:
+    path: ~/.local/etc/envvars/00-rust.shrc
+    src: ~/.cargo/env
+    state: link
+
+- name: Install Rust | bash_completion
+  ansible.builtin.copy:
+    src: ./files/rust/bash_completion.shrc
+    dest: ~/.local/etc/bash_completion.d/rust
+
+- name: Install Rust | default toolchain
+  ansible.builtin.command: ~/.cargo/bin/rustup show active-toolchain
+  register: rust_toolchain_check
+  changed_when: False
+
+- name: Install Rust | default toolchain
+  ansible.builtin.command: ~/.cargo/bin/rustup toolchain install stable
+  when: rust_toolchain_check.stdout == ''

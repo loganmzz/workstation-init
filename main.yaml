@@ -17,6 +17,7 @@
     - loganmzz-scripts
     - jdks
     - nvm
+    - rust
     - slack
     - kubectl
     - helm
