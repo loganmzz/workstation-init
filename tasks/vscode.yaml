@@ -15,9 +15,21 @@
     src: ./files/vscode/settings.json
     dest: ~/.config/Code/User/settings.json
     mode: '0640'
+    backup: yes
 
 - name: Install VS Code | Copy user keybindings
   ansible.builtin.copy:
     src: ./files/vscode/keybindings.json
     dest: ~/.config/Code/User/keybindings.json
     mode: '0640'
+    backup: yes
+
+- name: Install VS Code | Extensions
+  loganmzz_vscode_extension:
+    name: "{{ item }}"
+  loop:
+  - eamodio.gitlens
+  - ms-python.python
+  - hashicorp.terraform
+  - ms-kubernetes-tools.vscode-kubernetes-tools
+  - hookyqr.beautify

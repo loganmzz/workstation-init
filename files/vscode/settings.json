@@ -5,7 +5,6 @@
     "terminal.integrated.scrollback": 10000,
     "workbench.iconTheme": "vscode-icons",
     "workbench.editor.enablePreview": false,
-    "csscomb.formatOnSave": true,
     "[scss]": {
 
     },
@@ -13,7 +12,6 @@
     "typescript.tsserver.log": "verbose",
     "editor.renderWhitespace": "all",
     "window.title": "${dirty}${rootName}${separator}${activeEditorMedium}${separator}${rootPath}",
-    "material-icon-theme.showUpdateMessage": false,
     "editor.fontLigatures": true,
     "terminal.integrated.fontFamily": "'FiraCode Nerd Font', monospace",
     "terminal.integrated.fontSize": 14,
@@ -28,10 +26,8 @@
     },
     "gitlens.keymap": "none",
     "gitlens.advanced.messages": {
-        "suppressShowKeyBindingsNotice": true
     },
     "workbench.startupEditor": "welcomePage",
-    "gitlens.historyExplorer.enabled": true,
     "[shellscript]": {},
     "files.associations": {
         "*.bats": "shellscript",
@@ -53,8 +49,6 @@
     },
     "files.trimTrailingWhitespace": true,
     "window.menuBarVisibility": "toggle",
-    "gitlens.views.fileHistory.enabled": true,
-    "gitlens.views.lineHistory.enabled": true,
     "typescript.updateImportsOnFileMove.enabled": "always",
     "yaml.schemas": {
         "Kubernetes": "*.yaml"
@@ -65,11 +59,9 @@
     "[javascript]": {
         "editor.defaultFormatter": "HookyQR.beautify"
     },
-    "vsicons.dontShowNewVersionMessage": true,
     "workbench.editorAssociations": {
         "git-rebase-todo": "default"
     },
-    "jenkins-jack.pipeline.tree.items": [],
     "security.workspace.trust.untrustedFiles": "open",
     "yaml.customTags": [
         "!encrypted/pkcs1-oaep scalar",
@@ -79,5 +71,7 @@
     "terminal.integrated.persistentSessionReviveProcess": "never",
     "python.defaultInterpreterPath": "/bin/python3",
     "terminal.integrated.enableMultiLinePasteWarning": false,
-    "terminal.integrated.allowChords": false
+    "terminal.integrated.allowChords": false,
+    "redhat.telemetry.enabled": false,
+    "gitlens.codeLens.authors.command": false
 }
