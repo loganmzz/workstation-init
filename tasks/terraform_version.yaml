@@ -37,3 +37,10 @@
   loop:
   - "terraform-{{ terraform_version }}"
   - "terraform-{{ terraform_version }}.zip"
+
+- name: "Install Terraform {{ terraform_version }} | bash_completion"
+  ansible.builtin.blockinfile:
+    path: ~/.local/etc/bash_completion.d/terraform
+    marker: "# {mark} {{ terraform_version }}"
+    block: |
+      complete -C ~/.local/bin/terraform-{{ terraform_version }} terraform-{{ terraform_version }}
