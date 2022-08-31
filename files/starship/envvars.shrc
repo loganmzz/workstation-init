@@ -1,0 +1,1 @@
+export STARSHIP_CONFIG=~/.local/etc/starship/config.toml

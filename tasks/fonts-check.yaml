@@ -1,0 +1,9 @@
+- name: "{{ task_name }} {{ font_name }} font - Check ({{ format.type }})"
+  ansible.builtin.stat:
+    path: /usr/share/fonts/{{ format.type }}/{{ font_name }}
+  register: fonts_check_dir
+
+- name: "{{ task_name }} - Check ({{ format.type }})"
+  set_fact:
+    "fonts_check_{{ font_name | lower }}_{{ format.type }}":
+      exists: "{{ fonts_check_dir.stat.exists }}"

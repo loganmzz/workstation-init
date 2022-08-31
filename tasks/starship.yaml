@@ -1,0 +1,99 @@
+# https://starship.rs/
+- vars:
+    task_name: Install Starship.rs |
+    font_name: FiraCode
+    font_src: ./temp/nerdfonts-FiraCode
+    font_force: False
+  block:
+
+  - loop:
+    - type: opentype
+      ext: otf
+    - type: truetype
+      ext: ttf
+    loop_control:
+      loop_var: format
+      label: "{{ format.type }}"
+    ansible.builtin.include_tasks: ./tasks/fonts-check.yaml
+
+  - name: Install Starship.rs | FiraCode Nerd Font - Download
+    ansible.builtin.get_url:
+      url: https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/FiraCode.zip
+      dest: ./temp/nerdfonts-FiraCode.zip
+    when: font_force or fonts_check_firacode_opentype.exists == False or fonts_check_firacode_truetype.exists == False
+
+  - name: Install Starship.rs | FiraCode Nerd Font - Extract
+    ansible.builtin.file:
+      path: ./temp/nerdfonts-FiraCode
+      state: directory
+    when: font_force or fonts_check_firacode_opentype.exists == False or fonts_check_firacode_truetype.exists == False
+
+  - name: Install Starship.rs | FiraCode Nerd Font - Extract
+    ansible.builtin.unarchive:
+      src: ./temp/nerdfonts-FiraCode.zip
+      dest: ./temp/nerdfonts-FiraCode
+    when: font_force or fonts_check_firacode_opentype.exists == False or fonts_check_firacode_truetype.exists == False
+
+  - loop:
+    - type: opentype
+      ext: otf
+    - type: truetype
+      ext: ttf
+    loop_control:
+      loop_var: format
+      label: "{{ format.type }}"
+    ansible.builtin.include_tasks: ./tasks/fonts-install.yaml
+    when: font_force or fonts_check_firacode_opentype.exists == False or fonts_check_firacode_truetype.exists == False
+
+  - name: Install Starship.rs | FireCode Nerd Font - Clear
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: absent
+    loop:
+    - ./temp/nerdfonts-FiraCode
+    - ./temp/nerdfonts-FiraCode.zip
+
+- name: Install Starship.rs | Config
+  ansible.builtin.file:
+    path: ~/.local/etc/starship
+    state: directory
+
+- name: Install Starship.rs | Config
+  ansible.builtin.copy:
+    src: ./files/starship/config.toml
+    dest: ~/.local/etc/starship/config.toml
+
+- name: Install Starship.rs | envvars
+  ansible.builtin.copy:
+    src: ./files/starship/envvars.shrc
+    dest: ~/.local/etc/envvars/00-starship.shrc
+
+- name: Install Starship.rs | Check
+  ansible.builtin.stat:
+    path: ~/.local/bin/starship
+  register: starship_bin_check
+
+- name: Install Starship.rs | Download
+  ansible.builtin.get_url:
+    url: https://starship.rs/install.sh
+    dest: ./temp/starship-install.sh
+    mode: 0700
+  when: starship_bin_check.stat.exists == False
+
+- name: Install Starship.rs | Install
+  ansible.builtin.command: ./temp/starship-install.sh --bin-dir ~/.local/bin --yes --verbose
+  when: starship_bin_check.stat.exists == False
+
+- name: Install Starship.rs | Clear
+  ansible.builtin.file:
+    path: ./temp/starship-install.sh
+    state: absent
+
+- name: Install Starship.rs | Setup .bashrc
+  ansible.builtin.blockinfile:
+    path: ~/.bashrc
+    insertafter: "# END envvars"
+    marker: "# {mark} starship"
+    block: |
+      eval "$(starship init bash)"
+

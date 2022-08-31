@@ -1,0 +1,45 @@
+# Common
+
+[status]
+disabled=false
+
+[time]
+disabled=false
+
+# VCS
+
+[git_commit]
+disabled=true
+
+[git_metrics]
+disabled=false
+
+[git_status]
+diverged="⇣${behind_count}⇡${ahead_count}"
+ahead="⇡${count}"
+behind="⇣${count}"
+
+# DevOps
+
+[aws]
+disabled=true
+
+[gcloud]
+disabled=true
+
+[vagrant]
+disabled=true
+
+# Languages
+
+[kotlin]
+disabled=true
+
+[java]
+disabled=true
+
+[nodejs]
+disabled=true
+
+[ruby]
+disabled=true

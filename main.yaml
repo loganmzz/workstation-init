@@ -23,5 +23,6 @@
     - helm
     - terraform
     - google-cloud-sdk
+    - starship
     loop_control:
       loop_var: task

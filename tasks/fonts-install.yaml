@@ -1,0 +1,21 @@
+- name: "{{ task_name }} {{ font_name }} font - Install ({{ format.type }})"
+  become: yes
+  ansible.builtin.file:
+    path: /usr/share/fonts/{{ format.type }}/{{ font_name }}
+    state: directory
+
+- name: "{{ task_name }} {{ font_name }} font - Install ({{ format.type }})"
+  become: yes
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /usr/share/fonts/{{ format.type }}/{{ font_name }}/
+  with_fileglob:
+    - "{{ font_src }}/*.{{ format.ext }}"
+  loop_control:
+    label: "{{ item | basename }}"
+  register: fonts_install_copy
+
+- name: "{{ task_name }} {{ font_name }} font - Refresh ({{ format.type }})"
+  become: yes
+  ansible.builtin.command: fc-cache -f -v
+  when: fonts_install_copy.changed == True
