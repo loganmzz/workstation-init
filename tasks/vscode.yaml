@@ -24,6 +24,21 @@
     mode: '0640'
     backup: yes
 
+- name: Install VS Code | Copy user snippets
+  ansible.builtin.file:
+    path: ~/.config/Code/User/snippets/
+    state: directory
+
+- name: Install VS Code | Copy user snippets
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: ~/.config/Code/User/snippets/
+    backup: yes
+  with_fileglob:
+    - ./files/vscode/snippets/*.json
+  loop_control:
+    label: "{{ item | basename }}"
+
 - name: Install VS Code | Extensions
   loganmzz_vscode_extension:
     name: "{{ item }}"
