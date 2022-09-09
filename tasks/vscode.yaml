@@ -1,25 +1,48 @@
-- name: Install VS Code | Download
-  ansible.builtin.get_url:
-    url: https://update.code.visualstudio.com/1.70.2/linux-deb-x64/stable
-    dest: ./temp/vscode-1.70.2.deb
-    mode: '0640'
+- name: Install VS Code | Check
+  ansible.builtin.command: code --version
+  ignore_errors: yes
+  changed_when: False
+  register: vscode_bin_check
 
-- name: Install VS Code | apt
-  become: yes
-  become_user: root
-  ansible.builtin.apt:
-    deb: ./temp/vscode-1.70.2.deb
+- vars:
+    vscode:
+      version:
+        expected: "1.71.0"
+        actual: "{{ vscode_bin_check.stdout_lines | first | default('') }}"
+  block:
+  - name: Install VS Code | Check
+    debug:
+      var: vscode.version
+
+  - name: Install VS Code | Download
+    ansible.builtin.get_url:
+      url: https://update.code.visualstudio.com/{{ vscode.version.expected }}/linux-deb-x64/stable
+      dest: ./temp/vscode.deb
+      mode: '0640'
+    when: vscode.version.expected != vscode.version.actual
+
+  - name: Install VS Code | apt
+    become: yes
+    become_user: root
+    ansible.builtin.apt:
+      deb: ./temp/vscode.deb
+    when: vscode.version.expected != vscode.version.actual
+
+  - name: Install VS Code | Clear
+    ansible.builtin.file:
+      path: ./temp/vscode.deb
+      state: absent
 
 - name: Install VS Code | Copy user settings
   ansible.builtin.copy:
-    src: ./files/vscode/settings.json
+    src: ./files/vscode/config/settings.json
     dest: ~/.config/Code/User/settings.json
     mode: '0640'
     backup: yes
 
 - name: Install VS Code | Copy user keybindings
   ansible.builtin.copy:
-    src: ./files/vscode/keybindings.json
+    src: ./files/vscode/config/keybindings.json
     dest: ~/.config/Code/User/keybindings.json
     mode: '0640'
     backup: yes
@@ -35,16 +58,22 @@
     dest: ~/.config/Code/User/snippets/
     backup: yes
   with_fileglob:
-    - ./files/vscode/snippets/*.json
+    - ./files/vscode/config/snippets/*.json
   loop_control:
     label: "{{ item | basename }}"
+
+- name: Install VS Code | envvars
+  ansible.builtin.copy:
+    src: ./files/vscode/envvars.shrc
+    dest: ~/.local/etc/envvars/00-vscode.shrc
 
 - name: Install VS Code | Extensions
   loganmzz_vscode_extension:
     name: "{{ item }}"
   loop:
   - eamodio.gitlens
-  - ms-python.python
   - hashicorp.terraform
-  - ms-kubernetes-tools.vscode-kubernetes-tools
   - hookyqr.beautify
+  - ms-python.python
+  - ms-kubernetes-tools.vscode-kubernetes-tools
+  - redhat.ansible
