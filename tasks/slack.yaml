@@ -1,11 +1,28 @@
-- name: Install Slack | Download
-  ansible.builtin.get_url:
-    url: https://downloads.slack-edge.com/releases/linux/4.27.156/prod/x64/slack-desktop-4.27.156-amd64.deb
-    dest: ./temp/slack-4.27.156.deb
-    mode: '0640'
+- vars:
+    slack:
+      version: '4.28.171'
+  block:
+  - name: Install Slack | Check
+    ansible.builtin.shell: type slack
+    ignore_errors: yes
+    changed_when: False
+    register: slack_bin_check
 
-- name: Install Slack | apt
-  become: yes
-  become_user: root
-  ansible.builtin.apt:
-    deb: ./temp/slack-4.27.156.deb
+  - name: Install Slack | Download
+    ansible.builtin.get_url:
+      url: "https://downloads.slack-edge.com/releases/linux/{{ slack.version }}/prod/x64/slack-desktop-{{ slack.version }}-amd64.deb"
+      dest: ./temp/slack.deb
+      mode: '0640'
+    when: slack_bin_check is failed
+
+  - name: Install Slack | apt
+    become: yes
+    become_user: root
+    ansible.builtin.apt:
+      deb: ./temp/slack.deb
+    when: slack_bin_check is failed
+
+  - name: Install Slack | Clear
+    ansible.builtin.file:
+      path: ./temp/slack.deb
+      state: absent
