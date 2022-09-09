@@ -7,7 +7,7 @@ TGT_PATH="${basedir}/files/vscode/config"
 
 cd "${TGT_PATH}"
 for file in $(find . -type f); do
-    existing_backups="$(\ls -x "${SRC_PATH}/${file}".* 2>/dev/null | xargs realpath)"
+    existing_backups="$(\ls -x "${SRC_PATH}/${file}".* 2>/dev/null | xargs --no-run-if-empty -- realpath)"
     [[ -z "${existing_backups}" ]] || {
         echo "------------------------------------------------"
         echo "Found backups:"
