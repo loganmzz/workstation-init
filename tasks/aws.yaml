@@ -1,0 +1,35 @@
+- name: Install AWS | Check
+  ansible.builtin.shell: type aws
+  ignore_errors: yes
+  changed_when: False
+  register: aws_bin_check
+
+- name: Install AWS | Download
+  ansible.builtin.get_url:
+    url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    dest: ./temp/awscli-exe.zip
+  when: aws_bin_check is failed
+
+- name: Install AWS | Extract
+  ansible.builtin.unarchive:
+      src: ./temp/awscli-exe.zip
+      dest: ./temp/
+  when: aws_bin_check is failed
+
+- name: Install AWS | Install
+  become: yes
+  ansible.builtin.command: ./temp/aws/install
+  when: aws_bin_check is failed
+
+- name: Install AWS | Clear
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+  - ./temp/aws
+  - ./temp/awscli-exe.zip
+
+- name: Install AWS | bash_completion
+  ansible.builtin.copy:
+    src: ./files/aws/bash_completion.shrc
+    dest: ~/.local/etc/bash_completion.d/aws

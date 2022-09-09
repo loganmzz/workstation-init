@@ -2,7 +2,6 @@
 - name: Install default packages
   hosts: localhost
   connection: local
-  gather_facts: no
 
   tasks:
   - ansible.builtin.include_tasks: tasks/{{ task }}.yaml
@@ -12,6 +11,7 @@
     - bash_completion
     - git
     - jq
+    - docker
     - google_chrome
     - vscode
     - loganmzz-scripts
@@ -25,5 +25,6 @@
     - google-cloud-sdk
     - starship
     - discord
+    - aws
     loop_control:
       loop_var: task

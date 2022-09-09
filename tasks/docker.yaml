@@ -1,0 +1,31 @@
+- become: yes
+  block:
+  - name: Install Docker | APT Key
+    ansible.builtin.apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      keyring: /etc/apt/trusted.gpg.d/docker.gpg
+
+  - name: Install Docker | APT repository
+    ansible.builtin.apt_repository:
+      repo: deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/docker.gpg] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable
+      filename: docker
+
+  - name: Install Docker | APT
+    ansible.builtin.apt:
+      name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+
+  - name: Install Docker | docker group
+    ansible.builtin.user:
+      name: "{{ ansible_user_id }}"
+      append: yes
+      groups:
+      - docker
+    register: docker_group_user_add
+
+  - name: Install Docker | Update group
+    ansible.builtin.command: newgrp docker
+    when: docker_group_user_add.changed
