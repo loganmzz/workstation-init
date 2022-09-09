@@ -1,3 +1,10 @@
+- name: Install Rust | APT
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - build-essential
+    - cmake
+
 - name: Install Rust | Check
   ansible.builtin.stat:
     path: ~/.cargo/bin/rustup
