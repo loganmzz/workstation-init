@@ -32,3 +32,55 @@
   loop:
   - kubectx
   - kubens
+
+- name: Install kubectl | krew - Check
+  ansible.builtin.stat:
+    path: ~/.krew/bin/kubectl-krew
+  register: kubectl_krew_bin_check
+
+- name: Install kubectl | krew - Download
+  ansible.builtin.get_url:
+    url: https://github.com/kubernetes-sigs/krew/releases/latest/download/krew-linux_amd64.tar.gz
+    dest: ./temp/kubectl-krew.tar.gz
+  when: kubectl_krew_bin_check.stat.exists == False
+
+- name: Install kubectl | krew - Extract
+  ansible.builtin.file:
+    path: temp/kubectl-krew
+    state: directory
+  when: kubectl_krew_bin_check.stat.exists == False
+
+- name: Install kubectl | krew - Extract
+  ansible.builtin.unarchive:
+    src: "{{ playbook_dir }}/temp/kubectl-krew.tar.gz"
+    dest: "{{ playbook_dir }}/temp/kubectl-krew"
+  when: kubectl_krew_bin_check.stat.exists == False
+
+- name: Install kubectl | krew - Install
+  ansible.builtin.copy:
+    src: ./temp/kubectl-krew/krew-linux_amd64
+    dest: ~/.local/bin/krew
+  when: kubectl_krew_bin_check.stat.exists == False
+
+- name: Install kubectl | krew - Install
+  ansible.builtin.command: ./temp/kubectl-krew/krew-linux_amd64 install krew
+  when: kubectl_krew_bin_check.stat.exists == False
+
+- name: Install kubectl | krew - Clear
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+  - ./temp/kubectl-krew
+  - ./temp/kubectl-krew.tar.gz
+
+- name: Install kubectl | krew - envvars
+  ansible.builtin.copy:
+    src: ./files/kubectl/krew_envvars.shrc
+    dest: ~/.local/etc/envvars/00-kubectl-krew.shrc
+
+- name: Install kubectl | krew - Plugins
+  loganmzz_krew:
+    name: "{{ item }}"
+  loop:
+  - whoami
