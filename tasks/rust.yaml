@@ -1,14 +1,15 @@
+- name: Install Rust | Check
+  ansible.builtin.stat:
+    path: ~/.cargo/bin/rustup
+  register: rust_bin_check
+
 - name: Install Rust | APT
   become: yes
   ansible.builtin.apt:
     name:
     - build-essential
     - cmake
-
-- name: Install Rust | Check
-  ansible.builtin.stat:
-    path: ~/.cargo/bin/rustup
-  register: rust_bin_check
+  when: rust_bin_check.stat.exists == False
 
 - name: Install Rust | Download
   ansible.builtin.get_url:

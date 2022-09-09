@@ -1,4 +1,11 @@
+- name: Install Docker | Check
+  ansible.builtin.shell: type docker
+  ignore_errors: yes
+  changed_when: False
+  register: docker_bin_check
+
 - become: yes
+  when: docker_bin_check is failed
   block:
   - name: Install Docker | APT Key
     ansible.builtin.apt_key:

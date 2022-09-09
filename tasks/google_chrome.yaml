@@ -1,11 +1,23 @@
+- name: Install Google Chrome | Check
+  ansible.builtin.shell: type google-chrome
+  ignore_errors: yes
+  changed_when: False
+  register: googlechrome_bin_check
+
 - name: Install Google Chrome | Download
   ansible.builtin.get_url:
     url: https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     dest: ./temp/google_chrome.deb
     mode: '0640'
+  when: googlechrome_bin_check is failed
 
 - name: Install Google Chrome | apt
   become: yes
-  become_user: root
   ansible.builtin.apt:
     deb: ./temp/google_chrome.deb
+  when: googlechrome_bin_check is failed
+
+- name: Install Google Chrome | Clear
+  ansible.builtin.file:
+    path: ./temp/google_chrome.deb
+    state: absent

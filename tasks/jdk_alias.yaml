@@ -1,0 +1,12 @@
+- name: "Install JDK {{ jdk.id }} | Alias check {{ jdk_alias }}"
+  ansible.builtin.stat:
+    path: "{{ jdk_home | dirname }}/{{ jdk_alias }}"
+  register: jdk_alias_check
+
+- name: "Install JDK {{ jdk.id }} | Alias create {{ jdk_alias }}"
+  become: yes
+  ansible.builtin.file:
+    path: "{{ jdk_home | dirname }}/{{ jdk_alias }}"
+    src: "{{ jdk_home | basename }}"
+    state: link
+  when: jdk_alias_check.stat.exists == False

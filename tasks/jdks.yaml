@@ -1,11 +1,16 @@
 - vars:
     jdk_homeroot: "/usr/lib/jvm"
   block:
+  - name: Install JDKs | Check root directory
+    ansible.builtin.stat:
+      path: "{{ jdk_homeroot }}"
+    register: jdk_homeroot_check
   - name: Install JDKs | Set root directory
     become: yes
     ansible.builtin.file:
       path: "{{ jdk_homeroot }}"
       state: directory
+    when: jdk_homeroot_check.stat.exists == False
   - name: Install JDKs | envvars path
     ansible.builtin.copy:
       src: ./files/jdks/envvars-path.shrc

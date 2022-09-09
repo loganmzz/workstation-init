@@ -29,13 +29,10 @@
       state: absent
     when: jdk_dir_check.stat.exists == False
 
-  - name: "Install JDK {{ jdk.id }} | Alias"
-    become: yes
-    ansible.builtin.file:
-      path: "{{ jdk_home | dirname }}/{{ item }}"
-      src: "{{ jdk_home | basename }}"
-      state: link
+  - ansible.builtin.include_tasks: ./jdk_alias.yaml
     loop: "{{ jdk.aliases | default([]) }}"
+    loop_control:
+      loop_var: jdk_alias
 
   - name: "Install JDK {{ jdk.id }} | envvars jdk_home"
     ansible.builtin.template:
