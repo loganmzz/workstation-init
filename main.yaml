@@ -26,5 +26,6 @@
     - starship
     - discord
     - aws
+    - chromium
     loop_control:
       loop_var: task

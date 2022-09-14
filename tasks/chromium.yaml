@@ -1,0 +1,12 @@
+- name: Install Chromium | Check
+  ansible.builtin.shell: type chromium
+  ignore_errors: yes
+  changed_when: False
+  register: chromium_check_bin
+
+- name: Install Chromium | Install
+  become: yes
+  community.general.snap:
+    name:
+    - chromium
+  when: chromium_check_bin is failed
