@@ -1,21 +1,19 @@
-- name: Install Discord | Check
-  ansible.builtin.stat:
-    path: /usr/share/discord
-  register: discord_dir_check
+- vars:
+    discord_version: 0.0.20
+  block:
+  - name: Install Discord | Download
+    ansible.builtin.get_url:
+      url: "https://dl.discordapp.net/apps/linux/{{ discord_version }}/discord-{{ discord_version }}.deb"
+      dest: ./temp/discord.deb
+    when: not discord_version in (ansible_facts.packages.discord | default([]) | map(attribute='version'))
 
-- name: Install Discord | Download
-  ansible.builtin.get_url:
-    url: https://dl.discordapp.net/apps/linux/0.0.19/discord-0.0.19.deb
-    dest: ./temp/discord-0.0.19.deb
-  when: discord_dir_check.stat.exists == False
+  - name: Install Discord | Install
+    become: yes
+    ansible.builtin.apt:
+      deb: ./temp/discord.deb
+    when: not discord_version in (ansible_facts.packages.discord | default([]) | map(attribute='version'))
 
-- name: Install Discord | Install
-  become: yes
-  ansible.builtin.apt:
-    deb: ./temp/discord-0.0.19.deb
-  when: discord_dir_check.stat.exists == False
-
-- name: Install Discord | Clear
-  ansible.builtin.file:
-    path: ./temp/discord-0.0.19.deb
-    state: absent
+  - name: Install Discord | Clear
+    ansible.builtin.file:
+      path: ./temp/discord.deb
+      state: absent
