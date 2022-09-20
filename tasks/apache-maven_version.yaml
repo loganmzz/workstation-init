@@ -1,0 +1,37 @@
+- vars:
+    maven_home: "{{ maven_root }}/apache-maven-{{ maven_version }}"
+    maven_archive: "./temp/apache-maven-{{ maven_version }}-bin.tar.gz"
+    maven_version_slug: "{{ maven_version | regex_replace('[.]','_') }}"
+  block:
+  - name: Install Maven {{ maven_version }} | Check
+    ansible.builtin.stat:
+      path: "{{ maven_home }}"
+    register: maven_check_dir
+
+  - name: Install Maven {{ maven_version }} | Download
+    ansible.builtin.get_url:
+      url: "https://dlcdn.apache.org/maven/maven-3/{{ maven_version }}/binaries/{{ maven_archive | basename }}"
+      dest: "{{ maven_archive }}"
+    when: maven_check_dir.stat.exists == False
+
+  - name: Install Maven {{ maven_version }} | Extract
+    ansible.builtin.unarchive:
+      src: "{{ maven_archive }}"
+      dest: "{{ maven_root }}"
+    when: maven_check_dir.stat.exists == False
+
+  - name: Install Maven {{ maven_version }} | Clean
+    ansible.builtin.file:
+      path: "{{ maven_archive }}"
+      state: absent
+
+  - name: "Install Maven {{ maven_version }} | envvars m2_home"
+    ansible.builtin.template:
+      src: ./files/apache-maven/envvars-m2_home.shrc.j2
+      dest: ~/.local/etc/envvars/00-maven-m2_home_{{ maven_version_slug }}.shrc
+
+  - name: "Install Maven {{ maven_version }} | envvars default"
+    ansible.builtin.template:
+      src: ./files/apache-maven/envvars-default.shrc.j2
+      dest: ~/.local/etc/envvars/10-maven-default.shrc
+    when: maven_version == maven_default

@@ -1,0 +1,21 @@
+- vars:
+    maven_root: ~/.local/lib/apache-maven
+    maven_versions:
+    - 3.8.6
+    maven_default: "{{ maven_versions | last }}"
+  block:
+  - name: Install Maven | Prepare
+    ansible.builtin.file:
+      path: "{{ maven_root }}"
+      state: directory
+
+  - name: Install Maven | envvars path
+    ansible.builtin.copy:
+      src: ./files/apache-maven/envvars-path.shrc
+      dest: ~/.local/etc/envvars/50-maven-path.shrc
+
+  - name: Install Maven | versions
+    ansible.builtin.include_tasks: ./apache-maven_version.yaml
+    loop: "{{ maven_versions }}"
+    loop_control:
+      loop_var: maven_version

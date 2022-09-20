@@ -4,7 +4,8 @@
   connection: local
 
   tasks:
-  - ansible.builtin.include_tasks: tasks/{{ task }}.yaml
+  - name: Install modules
+    ansible.builtin.include_tasks: tasks/{{ task }}.yaml
     loop:
     - init
     - envvars
@@ -27,5 +28,6 @@
     - discord
     - aws
     - chromium
+    - apache-maven
     loop_control:
       loop_var: task
