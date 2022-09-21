@@ -19,3 +19,14 @@
     loop: "{{ maven_versions }}"
     loop_control:
       loop_var: maven_version
+
+- name: Install Maven | ~/.m2
+  ansible.builtin.file:
+    path: ~/.m2
+    state: directory
+- name: Install Maven | settings
+  ansible.builtin.copy:
+    src: ./files/apache-maven/settings.xml
+    dest: ~/.m2/settings.xml
+    remote_src: yes
+    backup: yes
