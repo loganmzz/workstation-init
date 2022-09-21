@@ -1,0 +1,46 @@
+- name: Install Jetbrains | Toolbox - Check
+  ansible.builtin.stat:
+    path: ~/.local/bin/jetbrains-toolbox
+  register: jetbrains_toolbox_check_bin
+
+- name: Install Jetbrains | Toolbox - Get download link
+  ansible.builtin.uri:
+    url: https://data.services.jetbrains.com/products/releases?code=TBA&latest=true&type=release
+  when: jetbrains_toolbox_check_bin.stat.exists == False
+  register: jetbrains_toolbox_release
+
+- vars:
+    jetbrains_toolbox_url: "{{ jetbrains_toolbox_release.json.TBA[0].downloads.linux.link }}"
+    jetbrains_toolbox_basename: "{{ jetbrains_toolbox_url | basename | regex_replace('[.]tar[.]gz$', '') }}"
+  block:
+  - name: Install Jetbrains | Toolbox - Download
+    ansible.builtin.get_url:
+      url: "{{ jetbrains_toolbox_url }}"
+      dest: "./temp/jetbrains-toolbox.tar.gz"
+    when: jetbrains_toolbox_check_bin.stat.exists == False
+
+  - name: Install Jetbrains | Toolbox - Extract
+    ansible.builtin.unarchive:
+      src: "{{ playbook_dir }}/temp/jetbrains-toolbox.tar.gz"
+      dest: ~/.local/bin/
+      extra_opts:
+      - --strip-components=1
+    when: jetbrains_toolbox_check_bin.stat.exists == False
+
+- name: Install Jetbrains | Toolbox - Settings
+  ansible.builtin.file:
+    path: ~/.local/share/JetBrains/Toolbox
+    state: directory
+    recurse: yes
+
+- name: Install Jetbrains | Toolbox - Settings
+  ansible.builtin.copy:
+    src: "./files/jetbrains/toolbox-settings.json"
+    dest: ~/.local/share/JetBrains/Toolbox/.settings.json
+    force: no
+    remote_src: yes
+
+- name: Install Jetbrains | Toolbox - Clear
+  ansible.builtin.file:
+    path: ./temp/jetbrains-toolbox.tar.gz
+    state: absent

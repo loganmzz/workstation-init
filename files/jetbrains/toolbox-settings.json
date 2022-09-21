@@ -1,0 +1,9 @@
+{
+    "autostart": false,
+    "shell_scripts": {
+        "location": "/home/logan/.local/bin"
+    },
+    "tools": {
+        "localize_tools": true
+    }
+}

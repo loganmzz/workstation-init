@@ -29,5 +29,6 @@
     - aws
     - chromium
     - apache-maven
+    - jetbrains
     loop_control:
       loop_var: task
