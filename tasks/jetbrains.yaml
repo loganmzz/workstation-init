@@ -1,3 +1,9 @@
+- name: Install Jetbrains | Toolbox - requirements
+  become: yes
+  ansible.builtin.apt:
+    name:
+    - libfuse2
+
 - name: Install Jetbrains | Toolbox - Check
   ansible.builtin.stat:
     path: ~/.local/bin/jetbrains-toolbox
