@@ -5,7 +5,6 @@
   ansible.builtin.file:
     path: ./temp
     state: directory
-    mode: u=rwx,g=,o=
 
 - name: Init | Directory ~/.local
   ansible.builtin.file:
