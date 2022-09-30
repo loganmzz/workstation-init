@@ -1,0 +1,4 @@
+[[ ! -z "${GOROOT}" ]] || GOROOT={{ golang.root }}/{{ golang_version_default }}
+export GOROOT
+
+export PATH="${GOROOT}/bin:${PATH}"

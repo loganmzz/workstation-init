@@ -1,0 +1,41 @@
+- vars:
+    golang_version_archive: "{{ playbook_dir }}/temp/golang-{{ golang_version }}.tar.gz"
+    golang_version_home: "{{ golang.root }}/{{ golang_version }}"
+    golang_version_minor: "{{ golang_version | regex_replace('^(?P<major>1)[.](?P<minor>[0-9]+)[.](?P<micro>[0-9]+)$', '\\g<minor>') }}"
+  block:
+
+  - name: "Install Go {{ golang_version }} | Check"
+    ansible.builtin.stat:
+      path: "{{ golang_version_home }}/bin/go"
+    register: golang_check_bin
+
+  - name: "Install Go {{ golang_version }} | Download"
+    ansible.builtin.get_url:
+      url: "https://go.dev/dl/go{{ golang_version }}.linux-amd64.tar.gz"
+      dest: "{{ golang_version_archive }}"
+    when: golang_check_bin.stat.exists == False
+
+  - name: "Install Go {{ golang_version }} | Home"
+    ansible.builtin.file:
+      path: "{{ golang_version_home }}"
+      state: directory
+      recurse: yes
+
+  - name: "Install Go {{ golang_version }} | Extract"
+    ansible.builtin.unarchive:
+      src: "{{ golang_version_archive }}"
+      dest: "{{ golang_version_home }}"
+      extra_opts:
+      - --strip-components=1
+      remote_src: yes
+    when: golang_check_bin.stat.exists == False
+
+  - name: "Install Go {{ golang_version }} | Clear"
+    ansible.builtin.file:
+      path: "{{ golang_version_archive }}"
+      state: absent
+
+  - name: "Install Go {{ golang_version }} | envvars"
+    ansible.builtin.template:
+      src: ./files/golang/envvars-goroot.shrc.j2
+      dest: ~/.local/etc/envvars/00-golang-goroot_{{ golang_version_minor }}.shrc

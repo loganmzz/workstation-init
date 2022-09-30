@@ -1,0 +1,19 @@
+- vars:
+    golang:
+      root: ~/.local/lib/go
+      versions:
+      - 1.19.1
+      - 1.18.6
+    golang_version_default: "{{ golang.versions | first }}"
+  block:
+
+  - name: Install Go | Versions
+    ansible.builtin.include_tasks: ./tasks/golang_version.yaml
+    loop: "{{ golang.versions }}"
+    loop_control:
+      loop_var: golang_version
+
+  - name: Install Go | envvars
+    ansible.builtin.template:
+      src: ./files/golang/envvars-path.shrc.j2
+      dest: ~/.local/etc/envvars/50-golang-path.shrc
