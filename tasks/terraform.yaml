@@ -1,9 +1,21 @@
-- ansible.builtin.include_tasks: "tasks/terraform_version.yaml"
+- name: Install Terraform
   vars:
-    terraform_versions:
-    - 1.2.8
-    - 1.2.2
-    - 1.0.5
-  loop: "{{ terraform_versions }}"
-  loop_control:
-    loop_var: terraform_version
+    terraform:
+      versions:
+      - 1.2.8
+      - 1.2.2
+      - 1.0.11
+  block:
+
+  - ansible.builtin.include_tasks: "tasks/terraform_version.yaml"
+    vars:
+      terraform_versions:
+    loop: "{{ terraform.versions }}"
+    loop_control:
+      loop_var: terraform_version
+
+  - name: Install Terraform | default
+    ansible.builtin.file:
+      path: ~/.local/bin/terraform
+      src: "~/.local/bin/terraform-{{ terraform.versions | first }}"
+      state: link
