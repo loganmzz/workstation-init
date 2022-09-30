@@ -62,6 +62,7 @@
   ansible.builtin.copy:
     src: ./files/starship/config.toml
     dest: ~/.local/etc/starship/config.toml
+    backup: yes
 
 - name: Install Starship.rs | envvars
   ansible.builtin.copy:
