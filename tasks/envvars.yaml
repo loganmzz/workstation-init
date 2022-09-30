@@ -7,11 +7,12 @@
   ansible.builtin.copy:
     src: ./files/envvars/main.shrc
     dest: ~/.envvars
+    backup: yes
 
 - name: Install envvars | Setup .bashrc
   ansible.builtin.blockinfile:
     path: ~/.bashrc
-    insertbefore: "# BEGIN user bash_completion"
+    insertbefore: BOF
     marker: "# {mark} envvars"
     block: |
       . ~/.envvars
