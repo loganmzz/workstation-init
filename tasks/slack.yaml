@@ -1,5 +1,6 @@
 - vars:
     slack:
+      # https://slack.com/intl/fr-fr/release-notes/linux
       version: '4.28.171'
   block:
   - name: Install Slack | Check
