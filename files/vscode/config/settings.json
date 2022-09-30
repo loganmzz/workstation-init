@@ -73,5 +73,7 @@
     "terminal.integrated.enableMultiLinePasteWarning": false,
     "terminal.integrated.allowChords": false,
     "redhat.telemetry.enabled": false,
-    "gitlens.codeLens.authors.command": false
+    "gitlens.codeLens.authors.command": false,
+    "vsicons.dontShowNewVersionMessage": true,
+    "terminal.integrated.gpuAcceleration": "off"
 }
