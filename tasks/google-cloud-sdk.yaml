@@ -1,7 +1,24 @@
+- name: Install Google Cloud CLI | Check
+  ansible.builtin.command: gcloud --version
+  ignore_errors: yes
+  changed_when: False
+  register: gcloud_check_bin
+
+- debug:
+    msg: "{{ gcloud_check_bin.stdout_lines | select('match', '^Google Cloud SDK [^ ]+$') }}"
+
 - vars:
-    google_cloud_sdk_version: "399.0.0"
-    google_cloud_sdk_archive: "{{ playbook_dir }}/temp/google-cloud-sdk-{{ google_cloud_sdk_version }}.tar.gz"
+    google_cloud_sdk:
+      version:
+        # https://cloud.google.com/sdk/docs/release-notes
+        expected: "403.0.0"
+        actual: "{{ gcloud_check_bin.stdout_lines | select('match', '^Google Cloud SDK [^ ]+$') | first | regex_replace('Google Cloud SDK ', '') }}"
+    google_cloud_sdk_archive: "{{ playbook_dir }}/temp/google-cloud-sdk-{{ google_cloud_sdk.version.expected }}.tar.gz"
   block:
+  - name: Install Google Cloud CLI | Check
+    debug:
+      var: google_cloud_sdk.version
+
   - name: Install Google Cloud CLI | Check
     ansible.builtin.stat:
       path: ~/.local/lib/google-cloud-sdk
