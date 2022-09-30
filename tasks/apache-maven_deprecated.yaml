@@ -1,0 +1,19 @@
+- name: "Remove Maven {{ maven_version }} | Link"
+  ansible.builtin.file:
+    path: "~/.local/bin/mvn-{{ maven_version }}"
+    state: absent
+
+- name: "Remove Maven {{ maven_version }} | Directory"
+  ansible.builtin.file:
+    path: "~/.local/lib/apache-maven/apache-maven-{{ maven_version }}"
+    state: absent
+
+- name: "Remove Maven {{ maven_version }} | envvars"
+  ansible.builtin.file:
+    path: "~/.local/etc/envvars/00-maven-m2_home_{{ maven_version | regex_replace('[.]','_') }}.shrc"
+    state: absent
+
+- name: Install Maven {{ maven_version }} | Archive
+  ansible.builtin.file:
+    path: "./temp/apache-maven-{{ maven_version }}-bin.tar.gz"
+    state: absent

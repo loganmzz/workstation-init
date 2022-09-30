@@ -25,10 +25,16 @@
       path: "{{ maven_archive }}"
       state: absent
 
+  - name: Install Maven {{ maven_version }} | Link
+    ansible.builtin.file:
+      path: "~/.local/bin/mvn-{{ maven_version }}"
+      src: "{{ maven_home }}/bin/mvn"
+      state: link
+
   - name: "Install Maven {{ maven_version }} | envvars m2_home"
     ansible.builtin.template:
       src: ./files/apache-maven/envvars-m2_home.shrc.j2
-      dest: ~/.local/etc/envvars/00-maven-m2_home_{{ maven_version_slug }}.shrc
+      dest: "~/.local/etc/envvars/00-maven-m2_home_{{ maven_version_slug }}.shrc"
 
   - name: "Install Maven {{ maven_version }} | envvars default"
     ansible.builtin.template:

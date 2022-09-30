@@ -1,8 +1,11 @@
 - vars:
     maven_root: ~/.local/lib/apache-maven
     maven_versions:
+    - 3.3.9
     - 3.8.6
     maven_default: "{{ maven_versions | last }}"
+    maven_deprecateds:
+    - 3.8.5
   block:
   - name: Install Maven | Prepare
     ansible.builtin.file:
@@ -17,6 +20,12 @@
   - name: Install Maven | versions
     ansible.builtin.include_tasks: ./apache-maven_version.yaml
     loop: "{{ maven_versions }}"
+    loop_control:
+      loop_var: maven_version
+
+  - name: Install Maven | deprecateds
+    ansible.builtin.include_tasks: ./apache-maven_deprecated.yaml
+    loop: "{{ maven_deprecateds }}"
     loop_control:
       loop_var: maven_version
 
