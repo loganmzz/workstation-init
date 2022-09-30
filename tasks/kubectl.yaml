@@ -1,8 +1,26 @@
-- name: Install kubectl | kubectl - Download
-  ansible.builtin.get_url:
-    url: https://storage.googleapis.com/kubernetes-release/release/v1.25.0/bin/linux/amd64/kubectl
-    dest: ~/.local/bin/kubectl
-    mode: u=rwx,g=rx,o=
+- name: Install kubectl | Check
+  ansible.builtin.command: kubectl version --short --client
+  ignore_errors: yes
+  changed_when: False
+  register: kubectl_check_bin
+
+- vars:
+    kubectl:
+      version:
+        expected: "v1.24.4"
+        actual: "{{ kubectl_check_bin.stdout_lines | first | default('') | regex_replace('^Client Version: ', '') }}"
+  block:
+  - name: Install kubectl | Check
+    debug:
+      var: kubectl.version
+
+  - name: Install kubectl | kubectl - Download
+    ansible.builtin.get_url:
+      url: https://storage.googleapis.com/kubernetes-release/release/{{ kubectl.version.expected }}/bin/linux/amd64/kubectl
+      dest: ~/.local/bin/kubectl
+      mode: u=rwx,g=rx,o=
+      force: yes
+    when: kubectl.version.expected != kubectl.version.actual
 
 - name: Install kubectl | kubectx/kubens - Git clone
   ansible.builtin.git:
