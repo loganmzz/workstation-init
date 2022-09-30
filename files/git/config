@@ -10,6 +10,7 @@
 	ff = merge --ff-only
 	fix = !git amend && git push --force-with-lease
 	ci = commit
+	ignored = status --ignored
 [pull]
 	rebase = true
 [core]
