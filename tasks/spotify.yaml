@@ -1,0 +1,3 @@
+- name: Install Spotify | snap
+  community.general.snap:
+    name: spotify

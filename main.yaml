@@ -31,5 +31,6 @@
     - apache-maven
     - jetbrains
     - golang
+    - spotify
     loop_control:
       loop_var: task
