@@ -8,3 +8,11 @@
   ansible.builtin.copy:
     src: ./files/nvm/envvars.shrc
     dest: ~/.local/etc/envvars/00-nvm.shrc
+    remote_src: yes
+
+- name: Install nvm | default-packages
+  ansible.builtin.copy:
+    src: ./files/nvm/default-packages
+    dest: ~/.nvm/
+    remote_src: yes
+    backup: yes
