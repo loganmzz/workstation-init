@@ -26,7 +26,7 @@
 
   - name: Install Google Cloud CLI | Download
     ansible.builtin.get_url:
-      url: https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ google_cloud_sdk_version }}-linux-x86_64.tar.gz
+      url: https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-cli-{{ google_cloud_sdk.version.expected }}-linux-x86_64.tar.gz
       dest: "{{ google_cloud_sdk_archive }}"
     when: google_cloud_sdk_dir_check.stat.exists == False
 
