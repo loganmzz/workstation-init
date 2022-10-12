@@ -1,0 +1,2 @@
+disabled_tasks:
+- google-cloud-sdk
