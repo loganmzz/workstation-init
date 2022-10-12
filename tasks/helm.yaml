@@ -1,5 +1,5 @@
 - name: Install Helm | Check
-  ansible.builtin.command: helm version --template='\{\{.Version\}\}'
+  ansible.builtin.command: "{% raw %}helm version --template='{{.Version}}'{% endraw %}"
   ignore_errors: yes
   changed_when: False
   register: helm_check_bin
