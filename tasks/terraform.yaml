@@ -2,6 +2,7 @@
   vars:
     terraform:
       versions:
+      - 1.3.2
       - 1.2.8
       - 1.2.2
       - 1.0.11
