@@ -36,3 +36,6 @@
     loop_control:
       loop_var: jdk
       label: "{{ jdk.id }}"
+
+- name: Install VisualVM | Include
+  ansible.builtin.include_tasks: ./visualvm.yaml

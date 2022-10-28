@@ -1,0 +1,48 @@
+- vars:
+    visualvm_version: "2.1.5"
+    visualvm_name: "visualvm_{{ visualvm_version | regex_replace('[.]', '') }}"
+    visualvm_file: "{{ visualvm_name }}.zip"
+    visualvm_archive: "./temp/{{ visualvm_file }}"
+    visualvm_temp: "./temp/{{ visualvm_name }}"
+    visualvm_dest: ~/.local/lib/visualvm
+  block:
+
+  - name: Install VisualVM | Check
+    ansible.builtin.stat:
+      path: "{{ visualvm_dest }}"
+    register: visualvm_check_dest
+
+  - name: Install VisualVM | Download
+    ansible.builtin.get_url:
+      url: "https://github.com/oracle/visualvm/releases/download/{{ visualvm_version }}/{{ visualvm_file }}"
+      dest: "{{ visualvm_archive }}"
+    when: visualvm_check_dest.stat.exists == False
+
+
+  - name: Install VisualVM | Extract
+    ansible.builtin.unarchive:
+      src: "{{ visualvm_archive }}"
+      dest: ./temp
+      remote_src: yes
+    when: visualvm_check_dest.stat.exists == False
+
+  - name: Install VisualVM | Copy
+    ansible.builtin.copy:
+      src: "{{ visualvm_temp }}/"
+      dest: "{{ visualvm_dest }}"
+      remote_src: yes
+    when: visualvm_check_dest.stat.exists == False
+
+  - name: "Install VisualVM | Clear"
+    ansible.builtin.file:
+      path: "{{ visualvm_archive }}"
+      state: absent
+    loop:
+    - "{{ visualvm_temp }}"
+    - "{{ visualvm_archive }}"
+
+  - name: "Install VisualVM | Link"
+    ansible.builtin.file:
+      path: "~/.local/bin/visualvm"
+      src: "{{ visualvm_dest }}/bin/visualvm"
+      state: link
