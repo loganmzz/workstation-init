@@ -1,0 +1,16 @@
+- become: yes
+  block:
+  - name: Install Azure | APT Key
+    ansible.builtin.apt_key:
+      url: https://packages.microsoft.com/keys/microsoft.asc
+      keyring: /etc/apt/trusted.gpg.d/microsoft.gpg
+
+  - name: Install Azure | APT repository
+    ansible.builtin.apt_repository:
+      repo: deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/microsoft.gpg] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main
+      filename: azure-cli
+
+  - name: Install Azure | APT
+    ansible.builtin.apt:
+      name:
+      - azure-cli
