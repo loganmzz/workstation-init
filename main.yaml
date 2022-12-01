@@ -35,6 +35,7 @@
     - golang
     - spotify
     - azure
+    - eclipse-mat
     when: 'task not in (disabled_tasks | default([])) and (enabled_tasks is not defined or task in enabled_tasks)'
     loop_control:
       loop_var: task

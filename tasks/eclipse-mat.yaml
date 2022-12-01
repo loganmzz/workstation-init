@@ -1,0 +1,40 @@
+- vars:
+    eclipse_mat:
+      version:
+        expected: '1.13.0.20220615'
+    eclipse_mat_root: ~/.local/lib/eclipse-mat/{{ eclipse_mat.version.expected }}
+    eclipse_mat_archive: "{{ playbook_dir }}/temp/eclipse-mat-{{ eclipse_mat.version.expected }}.zip"
+  block:
+  - name: Install Eclipse Memory Analyzer | Check
+    ansible.builtin.stat:
+      path: "{{ eclipse_mat_root }}"
+    register: eclipse_mat_check_dir
+
+  - name: Install Eclipse Memory Analyzer | Download
+    ansible.builtin.get_url:
+      url: https://mirrors.dotsrc.org/eclipse//mat/{{ eclipse_mat.version.expected | regex_search('[0-9]+\.[0-9]+\.[0-9]+') }}/rcp/MemoryAnalyzer-{{ eclipse_mat.version.expected }}-linux.gtk.x86_64.zip
+      dest: "{{ eclipse_mat_archive }}"
+    when: eclipse_mat_check_dir.stat.exists == False
+
+  - name: Install Eclipse Memory Analyzer | Extract
+    ansible.builtin.file:
+      path: "{{ eclipse_mat_root }}"
+      state: directory
+    when: eclipse_mat_check_dir.stat.exists == False
+
+  - name: Install Eclipse Memory Analyzer | Extract
+    ansible.builtin.unarchive:
+      src: "{{ eclipse_mat_archive }}"
+      dest: "{{ eclipse_mat_root }}"
+    when: eclipse_mat_check_dir.stat.exists == False
+
+  - name: Install Eclipse Memory Analyzer | Clear
+    ansible.builtin.file:
+      path: "{{ eclipse_mat_archive }}"
+      state: absent
+
+  - name: Install Eclipse Memory Analyzer | Link
+    ansible.builtin.file:
+      path: ~/.local/bin/MemoryAnalyzer
+      src: "{{ eclipse_mat_root }}/mat/MemoryAnalyzer"
+      state: link
