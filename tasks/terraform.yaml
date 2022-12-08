@@ -6,6 +6,7 @@
       - 1.2.8
       - 1.2.2
       - 1.0.11
+      - 1.0.5
   block:
 
   - ansible.builtin.include_tasks: "tasks/terraform_version.yaml"
