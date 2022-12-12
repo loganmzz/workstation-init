@@ -1,5 +1,5 @@
 - vars:
-    discord_version: 0.0.21
+    discord_version: 0.0.22
   block:
   - name: Install Discord | Download
     ansible.builtin.get_url:
