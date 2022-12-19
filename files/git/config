@@ -11,6 +11,8 @@
 	fix = !git amend && git push --force-with-lease
 	ci = commit
 	ignored = status --ignored
+	pushf = push --force-with-lease
+
 [pull]
 	rebase = true
 [core]
