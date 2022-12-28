@@ -1,1 +1,2 @@
 .local.*
+gke_gcloud_auth_plugin_cache
