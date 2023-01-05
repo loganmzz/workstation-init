@@ -1,0 +1,23 @@
+- vars:
+    velero_homeroot: "~/.local/lib/velero"
+    velero_versions:
+    - 1.10.0
+    - 1.9.5
+    velero_version_default: "{{ velero_versions | first }}"
+  block:
+  - name: Install Velero | Root directory
+    ansible.builtin.file:
+      path: "{{ velero_homeroot }}"
+      state: directory
+
+  - name: Install Velero | Install CLI
+    ansible.builtin.include_tasks: ./velero_cli_version.yaml
+    loop: "{{ velero_versions }}"
+    loop_control:
+      loop_var: velero_version
+
+  - name: "Install Velero | Link"
+    ansible.builtin.file:
+      path: "~/.local/bin/velero"
+      src: "velero-{{ velero_version_default }}"
+      state: link

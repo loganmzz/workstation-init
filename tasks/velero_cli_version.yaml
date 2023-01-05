@@ -1,0 +1,33 @@
+- vars:
+    velero_basename: "velero-v{{ velero_version }}-linux-amd64"
+    velero_home: "{{ velero_homeroot }}/{{ velero_basename }}"
+    velero_archive: "./temp/{{ velero_basename }}.tar.gz"
+  block:
+  - name: "Install Velero {{ velero_version }} | Check"
+    ansible.builtin.stat:
+      path: "{{ velero_home }}"
+    register: velero_dir_check
+
+  - name: "Install Velero {{ velero_version }} | Download"
+    ansible.builtin.get_url:
+      url: "https://github.com/vmware-tanzu/velero/releases/download/v{{ velero_version }}/{{ velero_basename }}.tar.gz"
+      dest: "{{ velero_archive }}"
+      mode: '0640'
+    when: velero_dir_check.stat.exists == False
+
+  - name: "Install Velero {{ velero_version }} | Extract"
+    ansible.builtin.unarchive:
+      src: "{{ velero_archive }}"
+      dest: "{{ velero_homeroot }}"
+    when: velero_dir_check.stat.exists == False
+
+  - name: "Install Velero {{ velero_version }} | Clear"
+    ansible.builtin.file:
+      path: "{{ velero_archive }}"
+      state: absent
+
+  - name: "Install Velero {{ velero_version }} | Link"
+    ansible.builtin.file:
+      path: "~/.local/bin/velero-{{ velero_version }}"
+      src: "{{ velero_home }}/velero"
+      state: link
