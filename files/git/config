@@ -12,6 +12,7 @@
 	ci = commit
 	ignored = status --ignored
 	pushf = push --force-with-lease
+	reuse = commit --reuse-message=HEAD
 
 [pull]
 	rebase = true
