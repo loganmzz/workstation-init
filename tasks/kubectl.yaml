@@ -42,6 +42,11 @@
     src: ./files/kubectl/bash_completion.shrc
     dest: ~/.local/etc/bash_completion.d/kubectl
 
+- name: Install kubectl | kubectl - envvars
+  ansible.builtin.copy:
+    src: ./files/kubectl/kubectl_envvars.shrc
+    dest: ~/.local/etc/envvars/00-kubectl.shrc
+
 - name: Install kubectl | kubectx/kubens - Link bash_completion
   ansible.builtin.file:
     src: "~/.local/lib/kubectx/completion/{{ item }}.bash"
