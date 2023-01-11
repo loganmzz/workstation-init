@@ -1,0 +1,19 @@
+- name: Install SOPS | Check
+  ansible.builtin.command: sops --version
+  ignore_errors: yes
+  changed_when: False
+  register: sops_check_bin
+
+- vars:
+    sops:
+      version:
+        expected: '3.7.3'
+        actual: "{{ sops_check_bin.stdout_lines | first | regex_replace('sops ([^ ]+).*', '\\1') }}"
+  block:
+  - name: Install SOPS | Download
+    ansible.builtin.get_url:
+      url: https://github.com/mozilla/sops/releases/download/v{{ sops.version.expected }}/sops-v{{ sops.version.expected }}.linux.amd64
+      dest: "~/.local/bin/sops"
+      mode: u=rwx,g=rx,o=rx
+      force: yes
+    when: sops.version.expected != sops.version.actual
