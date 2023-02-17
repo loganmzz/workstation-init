@@ -1,3 +1,4 @@
+# https://code.visualstudio.com/updates/
 - name: Install VS Code | Check
   ansible.builtin.command: code --version
   ignore_errors: yes
@@ -7,7 +8,7 @@
 - vars:
     vscode:
       version:
-        expected: "1.74.2"
+        expected: "1.75.1"
         actual: "{{ vscode_bin_check.stdout_lines | first | default('') }}"
   block:
   - name: Install VS Code | Check
