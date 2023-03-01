@@ -76,6 +76,7 @@
   - golang.go
   - hashicorp.terraform
   - hookyqr.beautify
+  - killsen.openresty-nginx-conf
   - ms-python.python
   - ms-kubernetes-tools.vscode-kubernetes-tools
   - redhat.ansible
