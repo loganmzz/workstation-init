@@ -46,3 +46,10 @@
 - name: Install Rust | default toolchain
   ansible.builtin.command: ~/.cargo/bin/rustup toolchain install stable
   when: rust_toolchain_check.stdout == ''
+
+- name: Install Rust | Cargo plugins
+  ansible.builtin.command: ~/.cargo/bin/cargo install {{ item }}
+  register: rust_cargo_plugins_install
+  changed_when: '"Installing" in rust_cargo_plugins_install.stderr'
+  loop:
+  - mdbook
