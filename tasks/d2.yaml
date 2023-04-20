@@ -1,0 +1,41 @@
+- name: "Install d2"
+  vars:
+    d2_bin: "~/.local/bin/d2"
+  block:
+  - name: "Install d2 | Check"
+    ansible.builtin.command: "{{ d2_bin }} --version"
+    ignore_errors: true
+    changed_when: false
+    register: d2_check_bin
+
+  - name: "Install d2 | Install"
+    vars:
+      d2_version:
+        expected: "v0.4.1"
+        actual: "{{ d2_check_bin.stdout_lines | first | default('') }}"
+      d2_archive: "./temp/d2-{{ d2_version.expected }}-linux-amd64.tar.gz"
+    block:
+    - name: Install d2 | Check
+      debug:
+        var: d2_version
+
+    - name: "Install d2 | Download"
+      ansible.builtin.get_url:
+        url: https://github.com/terrastruct/d2/releases/download/{{ d2_version.expected }}/d2-{{ d2_version.expected }}-linux-amd64.tar.gz
+        dest: "{{ d2_archive }}"
+      when: "d2_version.expected != d2_version.actual"
+
+    - name: "Install d2 | Extract"
+      ansible.builtin.unarchive:
+        src: "{{ d2_archive }}"
+        dest: "{{ d2_bin | dirname }}"
+        extra_opts:
+        - --strip=2
+        - --wildcards
+        - '*/d2'
+      when: "d2_version.expected != d2_version.actual"
+
+    - name: "Install d2 | Clear"
+      ansible.builtin.file:
+        path: "{{ d2_archive }}"
+        state: absent
