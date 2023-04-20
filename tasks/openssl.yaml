@@ -1,0 +1,5 @@
+- name: Install OpenSSL | libssl-dev
+  become: true
+  ansible.builtin.apt:
+    name:
+    - libssl-dev
