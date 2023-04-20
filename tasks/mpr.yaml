@@ -1,0 +1,12 @@
+# https://docs.makedeb.org/prebuilt-mpr/
+- name: Install MPR | apt_key
+  become: true
+  ansible.builtin.apt_key:
+    url: https://proget.makedeb.org/debian-feeds/prebuilt-mpr.pub
+    keyring: /etc/apt/trusted.gpg.d/prebuilt-mpr.gpg
+
+- name: Install MPR | apt_source
+  become: true
+  ansible.builtin.apt_repository:
+    filename: prebuilt-mpr
+    repo: "deb [arch=amd64 signed-by=/etc/apt/trusted.gpg.d/prebuilt-mpr.gpg] https://proget.makedeb.org prebuilt-mpr {{ ansible_distribution_release }}"

@@ -1,0 +1,6 @@
+# https://just.systems/
+- name: Install Just | apt
+  become: true
+  ansible.builtin.apt:
+    name:
+    - just
