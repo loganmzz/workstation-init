@@ -8,7 +8,7 @@
 - vars:
     vscode:
       version:
-        expected: "1.77.3"
+        expected: "1.82.2"
         actual: "{{ vscode_bin_check.stdout_lines | first | default('') }}"
   block:
   - name: Install VS Code | Check
