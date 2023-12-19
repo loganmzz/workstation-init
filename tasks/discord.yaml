@@ -1,17 +1,27 @@
 - vars:
     discord_version: 0.0.37
   block:
-  - name: Install Discord | Download
-    ansible.builtin.get_url:
-      url: "https://dl.discordapp.net/apps/linux/{{ discord_version }}/discord-{{ discord_version }}.deb"
-      dest: ./temp/discord.deb
-    when: not discord_version in (ansible_facts.packages.discord | default([]) | map(attribute='version'))
-
-  - name: Install Discord | Install
-    become: yes
+  - name: Install Discord | apt snapd-xdg-open
+    become: true
     ansible.builtin.apt:
-      deb: ./temp/discord.deb
-    when: not discord_version in (ansible_facts.packages.discord | default([]) | map(attribute='version'))
+      name: snapd-xdg-open
+
+  # - name: Install Discord | Download
+  #   ansible.builtin.get_url:
+  #     url: "https://dl.discordapp.net/apps/linux/{{ discord_version }}/discord-{{ discord_version }}.deb"
+  #     dest: ./temp/discord.deb
+  #   when: not discord_version in (ansible_facts.packages.discord | default([]) | map(attribute='version'))
+
+  # - name: Install Discord | Install
+  #   become: yes
+  #   ansible.builtin.apt:
+  #     deb: ./temp/discord.deb
+  #   when: not discord_version in (ansible_facts.packages.discord | default([]) | map(attribute='version'))
+
+  - name: Install Discord | snap
+    become: true
+    community.general.snap:
+      name: discord
 
   - name: Install Discord | Clear
     ansible.builtin.file:
