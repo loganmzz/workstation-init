@@ -1,0 +1,28 @@
+# https://github.com/usebruno/bruno/releases
+- vars:
+    bruno:
+      version:
+        expected: "1.5.1"
+        actual: "{{ (ansible_facts.packages.bruno | default([{}]) | first).version | default('') }}"
+  block:
+  - name: Install Bruno | Check
+    debug:
+      var: bruno.version
+
+  - name: Install Bruno | Download
+    ansible.builtin.get_url:
+      url: "https://github.com/usebruno/bruno/releases/download/v{{ bruno.version.expected }}/bruno_{{ bruno.version.expected }}_amd64_linux.deb"
+      dest: ./temp/bruno.deb
+      mode: '0640'
+    when: bruno.version.expected != bruno.version.actual
+
+  - name: Install Bruno | apt
+    become: true
+    ansible.builtin.apt:
+      deb: ./temp/bruno.deb
+    when: bruno.version.expected != bruno.version.actual
+
+  - name: Install Bruno | Clear
+    ansible.builtin.file:
+      path: ./temp/bruno.deb
+      state: absent
