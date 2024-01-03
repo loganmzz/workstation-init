@@ -1,0 +1,28 @@
+# https://github.com/kubernetes/minikube/releases
+
+- name: Install Minikube | Check
+  ansible.builtin.command: minikube version --output json
+  ignore_errors: yes
+  changed_when: False
+  register: minikube_bin_check
+
+- vars:
+    minikube:
+      version:
+        expected: "v1.32.0"
+        actual: "{{ (minikube_bin_check.stdout | default('{}', true) | from_json).minikubeVersion | default('') }}"
+  block:
+
+  - name: Install Minikube | Check
+    debug:
+      var: minikube.version
+
+  - name: Install Minikube | Download
+    become: true
+    ansible.builtin.get_url:
+      url: "https://storage.googleapis.com/minikube/releases/{{ minikube.version.expected }}/minikube-linux-amd64"
+      dest: /usr/local/bin/minikube
+      owner: root
+      group: root
+      mode: gu=rwx,o=rx
+      force: "{{ minikube.version.expected != minikube.version.actual }}"
