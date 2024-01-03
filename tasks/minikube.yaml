@@ -26,3 +26,9 @@
       group: root
       mode: gu=rwx,o=rx
       force: "{{ minikube.version.expected != minikube.version.actual }}"
+
+
+- name: Install Minikube | bash_completion
+  ansible.builtin.copy:
+    src: ./files/minikube/bash_completion.shrc
+    dest: ~/.local/etc/bash_completion.d/minikube
