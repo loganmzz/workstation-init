@@ -72,6 +72,7 @@
   loganmzz_vscode_extension:
     name: "{{ item }}"
   loop:
+  - bierner.emojisense
   - eamodio.gitlens
   - golang.go
   - hashicorp.terraform
