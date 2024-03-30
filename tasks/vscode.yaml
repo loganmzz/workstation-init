@@ -73,6 +73,7 @@
     name: "{{ item }}"
   loop:
   - bierner.emojisense
+  - bierner.markdown-mermaid
   - eamodio.gitlens
   - golang.go
   - hashicorp.terraform
