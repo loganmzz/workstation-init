@@ -20,6 +20,7 @@
     - name: fontconfig
     - name: git
     - name: jq
+    - name: asdf
     - name: docker
     - name: google_chrome
     - name: vscode
