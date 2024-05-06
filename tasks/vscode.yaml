@@ -1,3 +1,18 @@
+- name: Install VS Code | Compute path
+  ansible.builtin.set_fact:
+    vscode_user_config_path: ~/.config/Code/User
+
+- name: Install VS Code | Compute path
+  ansible.builtin.shell:
+    cmd: "wslpath \"$(wslvar APPDATA)\""
+  when: "lookup('ansible.builtin.env', 'WSL_DISTRO_NAME') | default('') != ''"
+  register: vscode_wsl_appdata
+
+- name: Install VS Code | Compute path
+  ansible.builtin.set_fact:
+    vscode_user_config_path: "{{ vscode_wsl_appdata.stdout | trim }}/Code/User"
+  when: vscode_wsl_appdata.changed
+
 # https://code.visualstudio.com/updates/
 - name: Install VS Code | Check
   ansible.builtin.command: code --version
@@ -20,14 +35,14 @@
       url: https://update.code.visualstudio.com/{{ vscode.version.expected }}/linux-deb-x64/stable
       dest: ./temp/vscode.deb
       mode: '0640'
-    when: vscode.version.expected != vscode.version.actual
+    when: vscode.install | default(True) and vscode.version.expected != vscode.version.actual
 
   - name: Install VS Code | apt
     become: yes
     become_user: root
     ansible.builtin.apt:
       deb: ./temp/vscode.deb
-    when: vscode.version.expected != vscode.version.actual
+    when: vscode.install | default(True) and vscode.version.expected != vscode.version.actual
 
   - name: Install VS Code | Clear
     ansible.builtin.file:
@@ -37,26 +52,26 @@
 - name: Install VS Code | Copy user settings
   ansible.builtin.copy:
     src: ./files/vscode/config/settings.json
-    dest: ~/.config/Code/User/settings.json
+    dest: "{{ vscode_user_config_path }}/settings.json"
     mode: '0640'
     backup: yes
 
 - name: Install VS Code | Copy user keybindings
   ansible.builtin.copy:
     src: ./files/vscode/config/keybindings.json
-    dest: ~/.config/Code/User/keybindings.json
+    dest: "{{ vscode_user_config_path }}/keybindings.json"
     mode: '0640'
     backup: yes
 
 - name: Install VS Code | Copy user snippets
   ansible.builtin.file:
-    path: ~/.config/Code/User/snippets/
+    path: "{{ vscode_user_config_path }}/snippets/"
     state: directory
 
 - name: Install VS Code | Copy user snippets
   ansible.builtin.copy:
     src: "{{ item }}"
-    dest: ~/.config/Code/User/snippets/
+    dest: "{{ vscode_user_config_path }}/snippets/"
     backup: yes
   with_fileglob:
     - ./files/vscode/config/snippets/*.json

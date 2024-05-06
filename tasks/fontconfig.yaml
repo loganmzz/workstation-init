@@ -1,0 +1,5 @@
+- name: Install fontconfig | APT
+  become: true
+  ansible.builtin.apt:
+    name:
+    - fontconfig

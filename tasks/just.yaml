@@ -1,6 +1,11 @@
 # https://just.systems/
+- name: Install Just | cargo
+  ansible.builtin.shell:
+    cmd: cargo install just
+  when: "just.installation | default('apt') == 'cargo'"
 - name: Install Just | apt
   become: true
   ansible.builtin.apt:
     name:
     - just
+  when: "just.installation | default('apt') == 'apt'"

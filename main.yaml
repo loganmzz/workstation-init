@@ -9,44 +9,48 @@
   - name: Load package facts
     ansible.builtin.package_facts:
   - name: Install modules
-    ansible.builtin.include_tasks: tasks/{{ task }}.yaml
+    ansible.builtin.include_tasks: tasks/{{ task.name }}.yaml
     loop:
-    - init
-    - envvars
-    - bash_completion
-    - git
-    - jq
-    - docker
-    - google_chrome
-    - vscode
-    - loganmzz-scripts
-    - jdks
-    - nvm
-    - rust
-    - slack
-    - kubectl
-    - helm
-    - terraform
-    - google-cloud-sdk
-    - starship
-    - discord
-    - aws
-    - chromium
-    - apache-maven
-    - jetbrains
-    - golang
-    - spotify
-    - azure
-    - eclipse-mat
-    - velero
-    - sops
-    - age
-    - openssl
-    - mpr
-    - just
-    - d2
-    - bruno
-    - minikube
-    when: 'task not in (disabled_tasks | default([])) and (enabled_tasks is not defined or task in enabled_tasks)'
+    - name: init
+    - name: wslu
+      enabled: false
+    - name: envvars
+    - name: bash_completion
+    - name: unzip
+    - name: fontconfig
+    - name: git
+    - name: jq
+    - name: docker
+    - name: google_chrome
+    - name: vscode
+    - name: loganmzz-scripts
+    - name: jdks
+    - name: nvm
+    - name: rust
+    - name: slack
+    - name: kubectl
+    - name: helm
+    - name: terraform
+    - name: google-cloud-sdk
+    - name: starship
+    - name: discord
+    - name: aws
+    - name: chromium
+    - name: apache-maven
+    - name: jetbrains
+    - name: golang
+    - name: spotify
+    - name: azure
+    - name: eclipse-mat
+    - name: velero
+    - name: sops
+    - name: age
+    - name: openssl
+    - name: mpr
+    - name: just
+    - name: d2
+    - name: bruno
+    - name: minikube
+    when: '(task.name not in (disabled_tasks | default([]))) and ((enabled_tasks is not defined and (task.enabled | default(True))) or task.name in enabled_tasks)'
     loop_control:
       loop_var: task
