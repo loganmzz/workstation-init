@@ -52,6 +52,7 @@
     - name: d2
     - name: bruno
     - name: minikube
+    - name: terragrunt
     when: '(task.name not in (disabled_tasks | default([]))) and ((enabled_tasks is not defined and (task.enabled | default(True))) or task.name in enabled_tasks)'
     loop_control:
       loop_var: task

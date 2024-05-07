@@ -1,0 +1,19 @@
+- name: Install Terragrunt | Main directory
+  ansible.builtin.file:
+    path: ~/.terragrunt
+    state: directory
+
+- name: Install Terragrunt | Cache directory
+  ansible.builtin.file:
+    path: ~/.terragrunt/cache
+    state: directory
+
+- name: Install Terragrunt | TF plugins directory
+  ansible.builtin.file:
+    path: ~/.terragrunt/cache/.plugins
+    state: directory
+
+- name: Install Terragrunt | envvars
+  ansible.builtin.copy:
+    src: ./files/terragrunt/envvars.shrc
+    dest: ~/.local/etc/envvars/00-terragrunt.shrc

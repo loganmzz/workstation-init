@@ -1,0 +1,2 @@
+export TERRAGRUNT_DOWNLOAD=~/.terragrunt/cache
+export TF_PLUGIN_CACHE_DIR="${TERRAGRUNT_DOWNLOAD}/.plugins"
