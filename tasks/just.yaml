@@ -1,8 +1,16 @@
 # https://just.systems/
-- name: Install Just | cargo
+- name: Install Just | cargo check
+  ansible.builtin.shell:
+    cmd: cargo install --list
+  when: "just.installation | default('apt') == 'cargo'"
+  register: just_cargo_check
+  changed_when: false
+- name: Install Just | cargo install
   ansible.builtin.shell:
     cmd: cargo install just
-  when: "just.installation | default('apt') == 'cargo'"
+  when: >-
+    just.installation | default('apt') == 'cargo' and
+    'just' not in just_cargo_check.stdout_lines | map('trim')
 - name: Install Just | apt
   become: true
   ansible.builtin.apt:
