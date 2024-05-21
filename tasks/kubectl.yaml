@@ -1,32 +1,32 @@
 - name: Install kubectl | Check
-  ansible.builtin.command: kubectl version --short --client
+  ansible.builtin.shell: "kubectl version --client --output json | jq -r '.clientVersion.gitVersion'"
   ignore_errors: yes
   changed_when: False
   register: kubectl_check_bin
 
 - vars:
-    kubectl:
-      version:
+    kubectl_version:
         expected: "v1.28.3"
         actual: "{{ kubectl_check_bin.stdout_lines | first | default('') | regex_replace('^Client Version: ', '') }}"
   block:
   - name: Install kubectl | Check
     debug:
-      var: kubectl.version
+      var: kubectl_version
 
   - name: Install kubectl | kubectl - Download
     ansible.builtin.get_url:
-      url: https://storage.googleapis.com/kubernetes-release/release/{{ kubectl.version.expected }}/bin/linux/amd64/kubectl
+      url: https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version.expected }}/bin/linux/amd64/kubectl
       dest: ~/.local/bin/kubectl
       mode: u=rwx,g=rx,o=
       force: yes
-    when: kubectl.version.expected != kubectl.version.actual
+    when: kubectl.binary | default(true) and kubectl_version.expected != kubectl_version.actual
 
 - name: Install kubectl | kubectx/kubens - Git clone
   ansible.builtin.git:
     repo: https://github.com/ahmetb/kubectx
     dest: ~/.local/lib/kubectx
     single_branch: yes
+  when: kubectl.binary | default(true)
 
 - name: Install kubectl | kubectx/kubens - Link binaries
   ansible.builtin.file:
@@ -36,6 +36,7 @@
   loop:
   - kubectx
   - kubens
+  when: kubectl.binary | default(true)
 
 - name: Install kubectl | kubectl - bash_completion
   ansible.builtin.copy:
@@ -55,6 +56,7 @@
   loop:
   - kubectx
   - kubens
+  when: kubectl.binary | default(true)
 
 - name: Install kubectl | krew - Check
   ansible.builtin.stat:
