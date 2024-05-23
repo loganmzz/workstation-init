@@ -1,0 +1,35 @@
+- name: Install k9s | Check
+  ansible.builtin.command: "k9s version --short"
+  ignore_errors: true
+  changed_when: false
+  register: k9s_check_bin
+
+- vars:
+    k9s_version:
+      expected: "v0.32.4"
+      actual: "{{ k9s_check_bin.stdout_lines | first | default('') | regex_replace('^Version +', '') }}"
+    k9s_archive: "{{ playbook_dir }}/temp/k9s-{{ k9s_version.expected }}.tar.gz"
+  block:
+  - name: Install k9s | Check
+    debug:
+      var: k9s_version
+
+  - name: Install k9s | Download
+    ansible.builtin.get_url:
+      url: https://github.com/derailed/k9s/releases/download/{{ k9s_version.expected }}/k9s_Linux_amd64.tar.gz
+      dest: "{{ k9s_archive }}"
+    when: k9s_version.expected != k9s_version.actual
+
+  - name: Install k9s | Extract
+    ansible.builtin.unarchive:
+      src: "{{ k9s_archive }}"
+      dest: ~/.local/bin
+      include:
+      - k9s
+      mode: gu=w,a=rx
+    when: k9s_version.expected != k9s_version.actual
+
+  - name: Install k9s | Clear
+    ansible.builtin.file:
+      path: "{{ k9s_archive }}"
+      state: absent

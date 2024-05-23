@@ -30,6 +30,7 @@
     - name: rust
     - name: slack
     - name: kubectl
+    - name: k9s
     - name: helm
     - name: terraform
     - name: google-cloud-sdk
