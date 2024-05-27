@@ -10,6 +10,7 @@
 	ff = merge --ff-only
 	fix = !git amend && git push --force-with-lease
 	ci = commit
+	co = checkout
 	ignored = status --ignored
 	pushf = push --force-with-lease
 	reuse = commit --reuse-message=HEAD
