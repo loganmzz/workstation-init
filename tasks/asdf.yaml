@@ -1,18 +1,44 @@
-- name: Install asdf | git clone
-  ansible.builtin.git:
-    repo: https://github.com/asdf-vm/asdf.git
-    dest: ~/.asdf
-    version: v0.14.0
-    depth: 1
-    force: true
-    single_branch: true
+- name: Install asdf | Check
+  ansible.builtin.shell: asdf version
+  ignore_errors: yes
+  changed_when: False
+  register: asdf_check_bin
 
-- name: Install asdf | envvars
-  ansible.builtin.copy:
-    src: ./files/asdf/envvars.shrc
-    dest: ~/.local/etc/envvars/10-asdf.shrc
+- vars:
+    asdf:
+      version:
+        expected: "0.18.0"
+        actual: "{{ asdf_check_bin.stdout | default('') | regex_replace('^v([^ ]+) .*$', '\\1') }}"
+  block:
+  - name: Install asdf  | Check
+    debug:
+      var: asdf.version
 
-- name: Install asdf | Bash completion
-  ansible.builtin.copy:
-    src: ./files/asdf/bash_completion.shrc
-    dest: ~/.local/etc/bash_completion.d/asdf
+  - name: Install asdf | Download
+    ansible.builtin.get_url:
+      url: "https://github.com/asdf-vm/asdf/releases/download/v{{ asdf.version.expected }}/asdf-v{{ asdf.version.expected }}-linux-386.tar.gz"
+      dest: ./temp/asdf.tar.gz
+    when: asdf.version.expected != asdf.version.actual
+
+  - name: Install asdf | Extract
+    ansible.builtin.unarchive:
+        src: ./temp/asdf.tar.gz
+        dest: ~/.local/bin
+    when: asdf.version.expected != asdf.version.actual
+
+  - name: Install asdf | Clear
+    ansible.builtin.file:
+      path: "{{ item }}"
+      state: absent
+    loop:
+    - ./temp/asdf.tar.gz
+
+  - name: Install asdf | envvars
+    ansible.builtin.copy:
+      src: ./files/asdf/envvars.shrc
+      dest: ~/.local/etc/envvars/10-asdf.shrc
+
+  - name: Install asdf | bash_completion
+    ansible.builtin.copy:
+      src: ./files/asdf/bash_completion.shrc
+      dest: ~/.local/etc/bash_completion.d/asdf
