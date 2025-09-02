@@ -13,10 +13,12 @@
 	co = checkout
 	ignored = status --ignored
 	pushf = push --force-with-lease
-	reuse = commit --reuse-message=HEAD
+	reuse = commit --reuse-message=HEAD --reset-author
 
 [pull]
 	rebase = true
+[push]
+	autoSetupRemote = true
 [core]
 	editor = code --wait
 	excludesFile = ~/.gitignore
