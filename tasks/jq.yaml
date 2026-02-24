@@ -7,7 +7,7 @@
 - vars:
     jq:
       version:
-        expected: "1.6"
+        expected: "1.8.1"
         actual: "{{ jq_check_bin.stdout_lines | first | default('') | regex_replace('^jq-', '') }}"
   block:
   - name: Install jq  | Check
@@ -16,13 +16,13 @@
 
   - name: Install jq | Download
     ansible.builtin.get_url:
-      url: https://github.com/stedolan/jq/releases/download/jq-{{ jq_version }}/jq-linux64
+      url: https://github.com/stedolan/jq/releases/download/jq-{{ jq.version.expected }}/jq-linux64
       dest: ~/.local/bin/jq
       mode: u=rwx,g=rx,o=
     when: jq.version.expected != jq.version.actual
 
   - name: Install jq | bash_completion
     ansible.builtin.get_url:
-      url: https://raw.githubusercontent.com/scop/bash-completion/master/completions/jq
+      url: https://raw.githubusercontent.com/scop/bash-completion/master/completions-core/jq.bash
       dest: ~/.local/etc/bash_completion.d/jq
       mode: u=rw,g=r,o=
