@@ -7,7 +7,7 @@
 - vars:
     asdf:
       version:
-        expected: "0.18.0"
+        expected: "0.18.1"
         actual: "{{ asdf_check_bin.stdout | default('') | regex_replace('^v([^ ]+) .*$', '\\1') }}"
   block:
   - name: Install asdf  | Check
