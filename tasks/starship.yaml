@@ -89,12 +89,3 @@
   ansible.builtin.file:
     path: ./temp/starship-install.sh
     state: absent
-
-- name: Install Starship.rs | Setup .bashrc
-  ansible.builtin.blockinfile:
-    path: ~/.bashrc
-    insertafter: "# END envvars"
-    marker: "# {mark} starship"
-    block: |
-      eval "$(starship init bash)"
-
